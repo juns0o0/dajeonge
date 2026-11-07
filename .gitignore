@@ -7,3 +7,4 @@ node_modules/
 contract/_src/
 *.log
 .DS_Store
+pages/apps-script/ADMIN_KEY.local.txt
