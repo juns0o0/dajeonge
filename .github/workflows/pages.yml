@@ -4,7 +4,7 @@ name: Deploy landing to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ["web/**", ".github/workflows/pages.yml"]
+    paths: ["web/**", "pages/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -34,6 +34,25 @@ jobs:
           sed -i 's#href="/privacy.html"#href="privacy.html"#g' site/index.html
           sed -i 's#href="/assets/#href="assets/#g; s#href="/"#href="./"#g' site/privacy.html
           sed -i "s#url(\"/fonts/#url(\"../fonts/#g; s#url('/fonts/#url('../fonts/#g" site/assets/dajeong.css
+          # 신청자 열람 화면 + 설정 (pages/)
+          cp pages/applicants.html pages/config.json site/
+          # 신청 폼 전송 대상: 서버 API 대신 Apps Script 웹앱 (config.json 의 applyEndpoint). 비어 있으면 그대로 둔다.
+          EP=$(python3 -c 'import json;print(json.load(open("pages/config.json")).get("applyEndpoint",""))')
+          if [ -n "$EP" ]; then
+            python3 - "$EP" <<'PY'
+          import sys,re
+          ep=sys.argv[1]
+          p='site/index.html'; s=open(p,encoding='utf-8').read()
+          old="const r = await fetch('/api/applications', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });"
+          new=("const r = await fetch(" + repr(ep) + ", { method: 'POST', body: JSON.stringify(Object.assign(body, { userAgent: navigator.userAgent, referrer: location.href })) })"
+               ".then(async (x) => { const d = await x.json().catch(() => ({})); return { ok: !!d.ok, json: async () => d }; });")
+          assert old in s, 'apply fetch line not found'
+          open(p,'w',encoding='utf-8').write(s.replace(old,new))
+          print('apply endpoint injected')
+          PY
+          else
+            echo "applyEndpoint is empty: form stays pointed at /api/applications"
+          fi
           touch site/.nojekyll
           grep -rnoE '(href|src)="/[^"]|url\(["'"'"']?/' site --include='*.html' --include='*.css' && exit 1 || echo "no absolute paths left"
 

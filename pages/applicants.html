@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>다정이 — 신청 접수</title>
+<link rel="stylesheet" href="fonts/jua.css">
+<link rel="stylesheet" href="assets/dajeong.css">
+<style>
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.5}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 16px 60px}
+  h1{font-family:var(--f-display);font-weight:400;font-size:28px;margin:0 0 4px}
+  .sub{color:var(--ink-3);margin:0 0 20px}
+  .card{background:var(--paper);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:16px}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  input[type=password],input[type=text],select,textarea{font:inherit;padding:10px 12px;border:1.5px solid var(--field);border-radius:var(--r-sm);background:#fff;color:var(--ink)}
+  input[type=password]{flex:1;min-width:220px}
+  button,.btn{font:inherit;font-weight:600;padding:10px 16px;border-radius:999px;border:0;background:var(--ink);color:#fff;cursor:pointer;text-decoration:none;display:inline-block}
+  button.ghost,.btn.ghost{background:var(--lime-soft);color:var(--ink)}
+  button.small{padding:5px 10px;font-size:13px;font-weight:500}
+  button:disabled{opacity:.5;cursor:default}
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 2px}
+  .stat{background:var(--lime-soft);border-radius:var(--r-sm);padding:8px 14px}
+  .stat b{font-size:20px;font-family:var(--f-num)}
+  .msg{color:var(--notable);min-height:1.4em;margin-top:8px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+  th{color:var(--ink-3);font-weight:600;font-size:13px;white-space:nowrap}
+  td.nowrap{white-space:nowrap}
+  .tag{display:inline-block;padding:2px 9px;border-radius:999px;font-size:12px;font-weight:600}
+  .tag.home{background:var(--mint)}
+  .tag.org{background:var(--sky)}
+  .status{font:inherit;font-size:13px;padding:4px 8px;border-radius:var(--r-sm);border:1.5px solid var(--field)}
+  .status.new{background:var(--watch-soft)} .status.contacted{background:var(--ok-soft)} .status.done{background:var(--line-2);color:var(--ink-3)}
+  .note{width:100%;min-width:160px;min-height:34px;resize:vertical;font-size:13px}
+  .empty{color:var(--ink-3);padding:30px;text-align:center}
+  .muted{color:var(--ink-4);font-size:13px}
+  @media (max-width:720px){ table,thead,tbody,tr,td,th{display:block} thead{display:none} tr{padding:10px 0;border-bottom:1px solid var(--line)} td{border:0;padding:3px 0} td::before{content:attr(data-h);color:var(--ink-4);font-size:12px;display:block} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>다정이 신청 접수</h1>
+  <p class="sub">랜딩페이지(index.html)에서 들어온 신청을 봅니다. 구글 시트에 저장되며, 이 화면은 열람 키가 있어야 읽습니다.</p>
+
+  <div class="card" id="keyCard">
+    <div class="row">
+      <input type="password" id="key" placeholder="열람 키 (Apps Script Code.gs 의 ADMIN_KEY)" autocomplete="off">
+      <button id="load">불러오기</button>
+      <label class="muted"><input type="checkbox" id="remember"> 이 브라우저에 기억</label>
+    </div>
+    <div class="msg" id="msg"></div>
+  </div>
+
+  <div class="card" id="listCard" hidden>
+    <div class="row" style="justify-content:space-between">
+      <div class="stats">
+        <div class="stat">전체 <b id="nAll">0</b></div>
+        <div class="stat">가정 <b id="nHome">0</b></div>
+        <div class="stat">기관 <b id="nOrg">0</b></div>
+        <div class="stat">연락 전 <b id="nNew">0</b></div>
+      </div>
+      <div class="row">
+        <select id="filter" class="status"><option value="">전체 상태</option><option value="new">연락 전</option><option value="contacted">연락함</option><option value="done">완료</option></select>
+        <button class="ghost small" id="refresh">새로고침</button>
+        <button class="ghost small" id="csv">CSV 내려받기</button>
+        <a class="btn ghost small" id="sheet" href="#" target="_blank" rel="noopener" hidden>시트 열기</a>
+      </div>
+    </div>
+    <p class="muted" id="when"></p>
+    <table>
+      <thead><tr><th>신청 시각</th><th>구분</th><th>이름</th><th>기관</th><th>연락처</th><th>내용</th><th>상태</th><th>메모</th><th></th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="empty" id="empty" hidden>아직 신청이 없습니다.</div>
+  </div>
+</div>
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const q = new URLSearchParams(location.search);
+  let CFG = { applyEndpoint: '', sheetUrl: '' };
+  let ROWS = [];
+  const KEY_STORE = 'dajeong.applicants.key';
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fmt = (iso) => { if (!iso) return ''; const d = new Date(iso); if (isNaN(d)) return esc(iso); return d.toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }); };
+  const STATUS = { new: '연락 전', contacted: '연락함', done: '완료' };
+  const key = () => $('#key').value.trim();
+
+  async function api(params) {
+    if (q.get('demo') === '1') return demo(params);
+    if (!CFG.applyEndpoint) throw new Error('아직 저장소(Apps Script)가 연결되지 않았습니다. pages/config.json 의 applyEndpoint 를 채워 주세요.');
+    const u = new URL(CFG.applyEndpoint); Object.entries(params).forEach(([k, v]) => u.searchParams.set(k, v)); u.searchParams.set('key', key());
+    const r = await fetch(u, { method: 'GET' });
+    const d = await r.json().catch(() => ({}));
+    if (!d.ok) throw new Error(d.error === 'key' ? '열람 키가 맞지 않습니다.' : (d.detail || '읽지 못했습니다. 잠시 후 다시 시도해 주세요.'));
+    return d;
+  }
+  function demo(params) {
+    if (params.action === 'list') return { ok: true, sheetUrl: '', time: new Date().toISOString(), rows: [
+      { id: 'a1', created_at: '2026-11-08T10:12:00+09:00', kind: 'home', name: '김하늘', org_name: '', phone: '010-0000-0001', email: '', message: '부모님 연령대: 70대 · 태블릿: 있어요', status: 'new', note: '' },
+      { id: 'a2', created_at: '2026-11-08T09:40:00+09:00', kind: 'org', name: '박서준', org_name: '행복요양원', phone: '이메일 연락', email: 'demo@example.com', message: '이용 규모: 10~30명', status: 'contacted', note: '11/9 통화' },
+    ] };
+    return { ok: true };
+  }
+
+  function render() {
+    const f = $('#filter').value;
+    const rows = ROWS.filter((r) => !f || (r.status || 'new') === f);
+    $('#nAll').textContent = ROWS.length;
+    $('#nHome').textContent = ROWS.filter((r) => r.kind === 'home').length;
+    $('#nOrg').textContent = ROWS.filter((r) => r.kind === 'org').length;
+    $('#nNew').textContent = ROWS.filter((r) => (r.status || 'new') === 'new').length;
+    $('#empty').hidden = rows.length > 0;
+    $('#rows').innerHTML = rows.map((r) => {
+      const st = r.status || 'new';
+      const contact = [r.phone, r.email].filter((x) => x && x !== '이메일 연락').join(' · ');
+      return `<tr data-id="${esc(r.id)}">
+        <td class="nowrap" data-h="신청 시각">${fmt(r.created_at)}</td>
+        <td data-h="구분"><span class="tag ${esc(r.kind)}">${r.kind === 'org' ? '기관' : '가정'}</span></td>
+        <td data-h="이름"><b>${esc(r.name)}</b></td>
+        <td data-h="기관">${esc(r.org_name)}</td>
+        <td class="nowrap" data-h="연락처">${esc(contact)}</td>
+        <td data-h="내용">${esc(r.message)}</td>
+        <td data-h="상태"><select class="status ${st}" data-act="status">${Object.entries(STATUS).map(([k, v]) => `<option value="${k}" ${k === st ? 'selected' : ''}>${v}</option>`).join('')}</select></td>
+        <td data-h="메모"><textarea class="note" data-act="note" placeholder="메모 (칸 밖 클릭하면 저장)">${esc(r.note)}</textarea></td>
+        <td><button class="small ghost" data-act="delete">삭제</button></td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function load() {
+    $('#msg').textContent = ''; $('#load').disabled = true;
+    try {
+      const d = await api({ action: 'list' });
+      ROWS = d.rows || [];
+      $('#listCard').hidden = false;
+      $('#when').textContent = `마지막 읽음 ${fmt(d.time)} · 시트가 원본이며 이 화면은 읽기·상태 변경용입니다.`;
+      const sheet = d.sheetUrl || CFG.sheetUrl; $('#sheet').hidden = !sheet; if (sheet) $('#sheet').href = sheet;
+      try { if ($('#remember').checked) localStorage.setItem(KEY_STORE, key()); else sessionStorage.setItem(KEY_STORE, key()); } catch (e) {}
+      render();
+    } catch (e) { $('#msg').textContent = e.message; }
+    finally { $('#load').disabled = false; }
+  }
+
+  $('#rows').addEventListener('change', async (e) => {
+    const act = e.target.dataset.act; if (!act || act === 'delete') return;
+    const id = e.target.closest('tr').dataset.id; const value = e.target.value;
+    try { await api({ action: act, id, value }); const r = ROWS.find((x) => x.id === id); if (r) r[act] = value; if (act === 'status') e.target.className = 'status ' + value; }
+    catch (err) { alert(err.message); }
+  });
+  $('#rows').addEventListener('click', async (e) => {
+    if (e.target.dataset.act !== 'delete') return;
+    const tr = e.target.closest('tr'); const id = tr.dataset.id; const r = ROWS.find((x) => x.id === id);
+    if (!confirm(`${r ? r.name : ''} 신청을 삭제할까요? 시트에서도 지워집니다.`)) return;
+    try { await api({ action: 'delete', id }); ROWS = ROWS.filter((x) => x.id !== id); render(); } catch (err) { alert(err.message); }
+  });
+  $('#csv').addEventListener('click', () => {
+    const cols = ['created_at', 'kind', 'name', 'org_name', 'phone', 'email', 'message', 'status', 'note'];
+    const lines = [cols.join(',')].concat(ROWS.map((r) => cols.map((c) => `"${String(r[c] ?? '').replace(/"/g, '""')}"`).join(',')));
+    const blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `다정이_신청_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+  });
+  $('#load').addEventListener('click', load);
+  $('#refresh').addEventListener('click', load);
+  $('#filter').addEventListener('change', render);
+  $('#key').addEventListener('keydown', (e) => { if (e.key === 'Enter') load(); });
+
+  (async () => {
+    try { CFG = Object.assign(CFG, await fetch('config.json', { cache: 'no-store' }).then((r) => r.json())); } catch (e) {}
+    let saved = q.get('key') || '';
+    try { saved = saved || localStorage.getItem(KEY_STORE) || sessionStorage.getItem(KEY_STORE) || ''; } catch (e) {}
+    if (saved) { $('#key').value = saved; load(); }
+    else if (q.get('demo') === '1') { $('#key').value = 'demo'; load(); }
+  })();
+})();
+</script>
+</body>
+</html>
