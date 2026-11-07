@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>다정이 · 부모님 태블릿</title>
+<link rel="stylesheet" href="/assets/dajeong.css">
+<style>html,body{height:100%}</style>
+</head>
+<body>
+<!-- 로그인 (태블릿 설치 때 한 번만) -->
+<div class="login" id="login">
+  <form class="card stack" id="loginForm">
+    <div style="display:flex;align-items:center;gap:10px"><div style="width:40px" id="mark"></div><h2>다정이 태블릿 연결</h2></div>
+    <p class="muted">가족 코드와 태블릿 비밀번호를 한 번만 입력합니다.</p>
+    <div class="field"><label for="code">가족 코드</label><input id="code" autocomplete="off" placeholder="예: DEMO1" required></div>
+    <div class="field"><label for="pw">태블릿 비밀번호</label><input id="pw" type="password" placeholder="숫자 4자리" required></div>
+    <p class="err" id="loginErr"></p>
+    <button class="btn lime lg block" type="submit">연결하기</button>
+  </form>
+</div>
+
+<main class="tablet" id="main" hidden>
+  <div class="clock"><b id="clkT"></b><span id="clkD"></span></div>
+  <div class="avatar" id="av"></div>
+  <div class="say" id="say">버튼을 누르면 다정이가 먼저 말을 겁니다</div>
+  <div class="heard" id="heard"></div>
+  <div class="state" id="state"><i></i><span id="stateT">대기 중</span></div>
+  <form class="textin" id="textin" hidden><input id="textIn" placeholder="말씀을 글로 적어 주세요" autocomplete="off"><button class="btn dark" type="submit">보내기</button></form>
+  <button class="bigbtn" id="bigBtn">다정이랑 이야기하기</button>
+  <div class="foot">
+    <button class="btn sm ghost" id="toggleText" type="button">글로 말하기</button>
+    <button class="btn sm ghost" id="endBtn" type="button" hidden>대화 마치기</button>
+    <button class="btn sm ghost" id="unlink" type="button">연결 해제</button>
+  </div>
+</main>
+
+<script src="/assets/illus.js"></script>
+<script src="/assets/api.js"></script>
+<script>
+const $ = s => document.querySelector(s);
+$("#mark").innerHTML = ILLUS.mark; $("#av").innerHTML = ILLUS.avatar;
+function tick(){ const d=new Date(); $("#clkT").textContent=d.toLocaleTimeString("ko-KR",{hour:"numeric",minute:"2-digit"}); $("#clkD").textContent=d.toLocaleDateString("ko-KR",{month:"long",day:"numeric",weekday:"long"}); }
+tick(); setInterval(tick, 20000);
+
+/* ---- 로그인 ---- */
+function showMain(){ $("#login").hidden = true; $("#main").hidden = false; }
+const a = API.auth(); if (a && a.role === "tablet") showMain();
+$("#loginForm").onsubmit = async e => { e.preventDefault(); $("#loginErr").textContent = "";
+  try { await API.login($("#code").value, $("#pw").value, "tablet"); showMain(); } catch (err) { $("#loginErr").textContent = err.message; } };
+$("#unlink").onclick = async () => { if (conv) await finish(); await API.logout(); location.reload(); };
+
+/* ---- 음성: 브라우저 음성 인식 + 기본 TTS ---- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let useText = !SR;
+$("#toggleText").onclick = () => { useText = !useText; $("#textin").hidden = !useText; $("#toggleText").textContent = useText ? "말로 하기" : "글로 말하기"; if (useText && conv) { stopListening(); $("#textIn").focus(); } else if (conv) listen(); };
+if (!SR) { $("#toggleText").hidden = true; $("#textin").hidden = false; }
+
+function speak(text){ return new Promise(res => {
+  if (!("speechSynthesis" in window)) return setTimeout(res, 600 + text.length * 70);
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = "ko-KR"; u.rate = 0.95;
+    const v = speechSynthesis.getVoices().find(v => v.lang && v.lang.startsWith("ko")); if (v) u.voice = v;
+    let done = false; const fin = () => { if (!done) { done = true; res(); } }; u.onend = fin; u.onerror = fin; setTimeout(fin, 2000 + text.length * 180); speechSynthesis.speak(u);
+  } catch { setTimeout(res, 800); } }); }
+
+let conv = null, busy = false, rec = null, botSpokeUntil = null, parentStart = null, listening = false;
+const setState = (t, on) => { $("#stateT").textContent = t; $("#state").classList.toggle("on", !!on); };
+const avatar = c => $("#av").className = "avatar" + (c ? " " + c : "");
+
+async function start(){
+  busy = true; $("#bigBtn").disabled = true;
+  try {
+    const d = await API.post("/conversations");
+    conv = d.conversation; $("#endBtn").hidden = false; $("#bigBtn").hidden = true; $("#heard").textContent = "";
+    if (useText) $("#textin").hidden = false;
+    await botSay(d.reply.text);
+  } catch (err) { $("#say").textContent = "연결이 안 됩니다. 잠시 후 다시 눌러 주세요."; $("#heard").textContent = err.message; $("#bigBtn").disabled = false; }
+  busy = false;
+}
+async function botSay(text){
+  avatar("talk"); setState("다정이가 말하는 중"); $("#say").textContent = text;
+  await speak(text); botSpokeUntil = new Date(); parentStart = null;
+  if (!useText) listen(); else { avatar("listen"); setState("말씀을 적어 주세요", true); }
+}
+function listen(){
+  if (!SR || !conv || listening) return;
+  rec = new SR(); rec.lang = "ko-KR"; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
+  let finalText = ""; listening = true; avatar("listen"); setState("듣는 중", true); $("#heard").textContent = "…";
+  rec.onresult = e => { if (!parentStart) parentStart = new Date(); let interim = "";
+    for (const r of e.results) { if (r.isFinal) finalText += r[0].transcript; else interim += r[0].transcript; }
+    $("#heard").textContent = "“" + (finalText || interim) + "”"; };
+  rec.onerror = e => { listening = false; if (e.error === "not-allowed") { setState("마이크 권한이 필요합니다 · 글로 말하기를 눌러 주세요"); } else if (conv) setTimeout(listen, 600); };
+  rec.onend = () => { listening = false; if (!conv) return; if (finalText.trim()) send(finalText.trim(), "voice"); else if (!busy) setTimeout(listen, 400); };
+  try { rec.start(); } catch { listening = false; }
+}
+function stopListening(){ if (rec) { try { rec.onend = null; rec.stop(); } catch {} } listening = false; }
+
+async function send(text, mode){
+  if (!conv || busy) return; busy = true; stopListening();
+  avatar(""); setState("다정이가 생각하는 중"); $("#heard").textContent = "“" + text + "”";
+  const now = new Date();
+  try {
+    const d = await API.post(`/conversations/${conv.id}/turns`, { text, input_mode: mode, started_at: (parentStart || now).toISOString(), ended_at: now.toISOString(), bot_spoke_until: botSpokeUntil ? botSpokeUntil.toISOString() : null });
+    busy = false; await botSay(d.reply.text);
+  } catch (err) { busy = false; $("#say").textContent = "잠깐만, 다시 말해 줄래?"; setState("오류: " + err.message); if (!useText) setTimeout(listen, 1000); }
+}
+$("#textin").onsubmit = e => { e.preventDefault(); const v = $("#textIn").value.trim(); if (!v) return; $("#textIn").value = ""; if (!parentStart) parentStart = new Date(); send(v, "text"); };
+$("#textIn").addEventListener("input", () => { if (!parentStart) parentStart = new Date(); });
+
+async function finish(){
+  if (!conv) return; stopListening(); try { speechSynthesis.cancel(); } catch {}
+  const id = conv.id; conv = null; busy = false;
+  $("#endBtn").hidden = true; $("#textin").hidden = true; avatar(""); setState("대화를 정리하는 중");
+  $("#say").textContent = "오늘도 고마워. 또 이야기하자!"; $("#heard").textContent = ""; speak("오늘도 고마워. 또 이야기하자!");
+  try { await API.post(`/conversations/${id}/finish`); setState("보호자 앱으로 전달했습니다"); } catch (err) { setState("저장 오류: " + err.message + " (다시 시도해 주세요)"); }
+  setTimeout(() => { $("#bigBtn").hidden = false; $("#bigBtn").disabled = false; $("#bigBtn").textContent = "다정이랑 이야기하기"; $("#say").textContent = "버튼을 누르면 다정이가 먼저 말을 겁니다"; setState("대기 중"); }, 4000);
+}
+$("#bigBtn").onclick = () => { if (!conv && !busy) start(); };
+$("#endBtn").onclick = finish;
+// 3분 동안 아무 말이 없으면 자동 종료
+setInterval(() => { if (conv && botSpokeUntil && !busy && Date.now() - botSpokeUntil.getTime() > 180000) finish(); }, 10000);
+</script>
+</body>
+</html>

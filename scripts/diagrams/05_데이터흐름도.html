@@ -1,0 +1,27 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="diagram.css"><link rel="stylesheet" href="fonts.css"></head><body>
+<h1 id="title"></h1><p class="sub" id="subtitle"></p><div id="canvas"></div>
+<script>
+const S = (id, x, y, title, lines, tone, w = 200) => ({ id, x, y, w, title, lines, tone });
+window.DIAGRAM = {
+  title: '대화 1건의 데이터 흐름 (검수 기준 경로)', subtitle: '음성 입력 → DB 저장 → 분석 → 대시보드 → AI 요약 · 같은 conversation_id 로 추적', width: 1240, height: 560,
+  groups: [{ x: 20, y: 20, w: 1200, h: 230, label: '대화 중 (실시간 · 3초 안에 응답)', tone: 'lime' }, { x: 20, y: 280, w: 1200, h: 260, label: '대화 후 (작업 워커 · 보호자 앱)' }],
+  nodes: [
+    S('s1', 40, 60, '① 대화 시작', ['POST /conversations', 'conversations(open) 생성', '첫마디 turn(bot) 저장'], 'lime'),
+    S('s2', 290, 60, '② 음성 → 글자', ['브라우저 음성 인식(ko-KR)', '발화 시작·종료 시각 기록', '미지원 시 글 입력'], 'lime'),
+    S('s3', 540, 60, '③ 발화 저장 + 응답 생성', ['POST /conversations/{id}/turns', 'turn(parent) 저장', '페르소나 + 관련 가족 기록 → OpenAI', 'turn(bot) 저장, 실패 시 고정 문구'], 'dark', 230),
+    S('s4', 820, 60, '④ 재생', ['응답 텍스트 → 기본 TTS', '재생 종료 시각 = 다음 응답 간격의 시작'], 'lime'),
+    S('s5', 1060, 60, '⑤ 종료', ['POST …/finish', 'status=finished', 'jobs(analyze) 큐'], 'lime', 150),
+    S('w1', 40, 320, '⑥ 분석 (워커)', ['태그: repeat · uncertain', '지표 5종 + duration · valid', 'conversation_metrics 저장', 'turns.tags · response_gap_sec 기록'], 'soft'),
+    S('w2', 290, 320, '⑦ 기준선', ['첫 유효 대화 +14일 · 유효 5회', '→ baselines 고정 (1회)', '이후 7일 평균을 비교'], 'soft'),
+    S('w3', 540, 320, '⑧ 대시보드', ['GET /dashboard/overview', '최근 7일 · 기준선 · 비교 레벨', '14일 일별 추이'], '', 230),
+    S('w4', 820, 320, '⑨ AI 요약 (버튼)', ['POST /summaries', 'summaries(pending) + jobs(summarize)', '워커 → OpenAI → text · status=done', '병명·진단 표현 필터'], 'dark'),
+    S('w5', 1060, 320, '⑩ 확인', ['GET /summaries/{id}', '대화 상세 · 주간 리포트', '백오피스에서도 조회'], '', 150),
+  ],
+  edges: [
+    { from: 's1', to: 's2' }, { from: 's2', to: 's3' }, { from: 's3', to: 's4' }, { from: 's4', to: 's2', sides: ['bottom', 'bottom'], dash: true, label: '다음 발화 (반복)', dy: 14 }, { from: 's4', to: 's5' },
+    { from: 's5', to: 'w1', sides: ['bottom', 'top'], label: 'queued → running', dx: 60, dy: -10 },
+    { from: 'w1', to: 'w2' }, { from: 'w2', to: 'w3' }, { from: 'w3', to: 'w4' }, { from: 'w4', to: 'w5' },
+  ],
+  notes: [{ x: 40, y: 470, w: 1160, html: '<b>예외 처리</b> · OpenAI 실패: 대화는 고정 문구로 계속, conversations.error 기록 · 분석/요약 실패: jobs.status=failed + error, 3회 자동 재시도 후 보호자가 ‘다시 시도’ · 빈 입력 422 · 다른 가족 기록 404 · 태블릿 토큰으로 수정 403 · 기준선 미수집: “수집 중 n/5회 · n/14일” 표시, 비교 없음' }],
+};
+</script><script src="diagram.js"></script></body></html>

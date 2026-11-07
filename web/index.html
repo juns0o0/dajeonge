@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>다정이 — 엄마 아빠의 말동무</title>
+<link rel="stylesheet" href="./fonts/jua.css">
+<style>
+@font-face{font-family:'Pretendard Variable';src:url('./fonts/PretendardVariable.woff2') format('woff2-variations');font-weight:45 920;font-display:swap}
+html{scroll-behavior:smooth}
+body{margin:0;background:#F4F0EA;color:#111111;font-family:'Pretendard Variable',Pretendard,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;word-break:keep-all}
+a{color:#111111}
+input,select,button{font-family:inherit}
+:focus-visible{outline:2.5px solid #111111;outline-offset:3px}
+.jua{font-family:'Jua','Pretendard Variable',sans-serif;font-weight:400}
+.lbl{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.pill{transition:transform .16s cubic-bezier(.16,1,.3,1)}
+.pill:hover{transform:translateY(-2px)}
+.pill:active{transform:translateY(1px)}
+.pill:hover .arw{transform:translateX(2px)}
+.arw{transition:transform .16s cubic-bezier(.16,1,.3,1)}
+.lift{transition:transform .2s cubic-bezier(.16,1,.3,1)}
+.lift:hover{transform:translateY(-4px)}
+@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+.blink{animation:blink 5s infinite;transform-box:fill-box;transform-origin:center}
+.blink2{animation:blink 6.2s 1.4s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-8px) rotate(-1.5deg)}}
+.float{animation:float 6s ease-in-out infinite}
+.float2{animation:float 7s 1s ease-in-out infinite}
+@media (max-width:640px){.navlink{display:none}.hero{padding-top:190px !important;min-height:0 !important}.hero-blob{top:-3% !important;right:-8% !important;width:60% !important}.sky{min-height:440px !important}}
+@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none !important;transition-duration:.01ms !important}}
+
+[hidden]{display:none !important}
+</style>
+</head>
+<body>
+<div style="max-width:1200px;margin:0 auto;padding:16px clamp(12px,2vw,24px) 24px;display:flex;flex-direction:column;gap:16px;box-sizing:border-box">
+
+<!-- HEADER -->
+<header style="position:sticky;top:12px;z-index:10;background:#FFFDFA;border-radius:24px;height:72px;padding:0 14px 0 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 0 0 1px rgba(17,17,17,.04)">
+  <a href="#top" aria-label="다정이 처음으로" style="display:flex;align-items:center;gap:10px;text-decoration:none">
+    <svg viewBox="0 0 120 100" width="40" height="34" aria-hidden="true"><path d="M58 6c30-4 56 14 58 44s-20 46-54 48S4 86 4 54 28 10 58 6z" fill="#111111"></path><g class="blink"><ellipse cx="64" cy="44" rx="8" ry="11" fill="#FFFDFA"></ellipse><ellipse cx="88" cy="46" rx="8" ry="11" fill="#FFFDFA"></ellipse></g></svg>
+    <span style="display:flex;flex-direction:column;gap:1px"><span class="jua" style="font-size:21px;line-height:1">다정이</span><span style="font-size:9px;font-weight:700;letter-spacing:.18em;color:#6B665E">DAJEONG-I</span></span>
+  </a>
+  <nav style="display:flex;align-items:center;gap:4px">
+    <a href="#how" class="lbl navlink" style="text-decoration:none;padding:12px 14px">사용 방법</a>
+    <a href="#app" class="lbl navlink" style="text-decoration:none;padding:12px 14px">자녀 앱</a>
+    <a href="#faq" class="lbl navlink" style="text-decoration:none;padding:12px 14px">FAQ</a>
+    <a href="#apply" aria-label="베타 신청" style="width:48px;height:48px;border-radius:50%;background:#111111;display:flex;align-items:center;justify-content:center;margin-left:6px"><svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 7h10M5 10h10M5 13h10" stroke="#FFFDFA" stroke-width="1.8" stroke-linecap="round"></path></svg></a>
+  </nav>
+</header>
+
+<!-- ROW: HERO + SKY -->
+<div id="top" style="display:flex;flex-wrap:wrap;gap:16px">
+  <section data-screen-label="히어로" class="hero" style="flex:1.45 1 520px;min-width:0;position:relative;background:#FFFDFA;border-radius:28px;padding:clamp(28px,4vw,52px);min-height:520px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;gap:28px">
+    <svg class="float hero-blob" viewBox="0 0 400 400" aria-hidden="true" style="position:absolute;right:-10%;top:4%;width:min(48%,360px);pointer-events:none">
+      <path d="M262 176c56-8 114 30 116 90s-42 108-102 110-118-30-118-86 48-106 104-114z" fill="#FFE59A"></path>
+      <path d="M160 34c74-10 152 28 156 100s-50 128-130 132S26 232 30 156 86 44 160 34z" fill="#F1ECE4"></path>
+      <g class="blink"><ellipse cx="196" cy="128" rx="11" ry="16" fill="#111111" transform="rotate(-8 196 128)"></ellipse><ellipse cx="232" cy="132" rx="11" ry="16" fill="#111111" transform="rotate(-8 232 132)"></ellipse></g>
+    </svg>
+    <h1 class="jua" style="position:relative;margin:0;font-size:clamp(40px,5.2vw,64px);line-height:1.2;letter-spacing:-0.01em;max-width:9.5em">엄마 아빠의<br>말동무,<br>다정이예요.</h1>
+    <div style="position:relative;display:flex;flex-direction:column;gap:24px">
+      <p style="margin:0;font-size:14px;line-height:1.85;color:#3C3934;max-width:330px">다정이는 내 말투 그대로 말해요. ‘엄마, 점심은 드셨어요?’ 내가 묻던 그대로 부모님께 안부를 여쭤고, 나눈 이야기는 내 앱으로 전해 줘요. 부모님은 태블릿 버튼만 누르시면 돼요.</p>
+      <a href="#apply" class="pill" style="align-self:flex-start;display:inline-flex;align-items:center;gap:18px;height:52px;padding:0 10px 0 26px;border-radius:999px;background:#111111;color:#FFFDFA;font-size:14px;font-weight:700;text-decoration:none">베타 신청하기<span class="arw" style="width:32px;height:32px;border-radius:50%;background:#FFE59A;display:inline-flex;align-items:center;justify-content:center"><svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="#111111" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></a>
+    </div>
+  </section>
+
+  <section data-screen-label="부모님 태블릿" class="sky" style="flex:1 1 360px;min-width:0;position:relative;border-radius:28px;min-height:520px;overflow:hidden;background:linear-gradient(170deg,#CFE6FB 0%,#A9D3FF 70%,#9CCAF5 100%)">
+    <span class="float2" style="position:absolute;left:8%;top:9%;width:76px;height:30px;border-radius:999px;background:rgba(255,253,250,.7)"></span>
+    <span class="float" style="position:absolute;right:14%;top:16%;width:110px;height:38px;border-radius:999px;background:rgba(255,253,250,.55)"></span>
+    <div style="position:absolute;left:46%;top:12%;width:66%;transform:translateX(-50%) rotate(-4deg);background:#111111;border-radius:26px;padding:10px;box-sizing:border-box">
+      <div style="aspect-ratio:1.55;background:#FFFDFA;border-radius:18px;position:relative;overflow:hidden">
+        <span style="position:absolute;left:6%;top:8%;font-size:clamp(10px,1vw,13px);font-weight:700;color:#6B665E">오후 2:14</span>
+        <svg viewBox="0 0 200 160" aria-hidden="true" style="position:absolute;left:50%;top:14%;width:34%;transform:translateX(-50%)"><path d="M96 10c46-4 92 22 94 66s-34 74-90 76S8 124 8 82 50 14 96 10z" fill="#FFE59A"></path><g class="blink2"><ellipse cx="102" cy="64" rx="8" ry="12" fill="#111111"></ellipse><ellipse cx="128" cy="66" rx="8" ry="12" fill="#111111"></ellipse></g></svg>
+        <span style="position:absolute;left:50%;bottom:9%;transform:translateX(-50%);width:66%;padding:3.6% 0;border-radius:999px;background:#111111;color:#FFFDFA;text-align:center;font-size:clamp(11px,1.2vw,15px);font-weight:700">다정이랑 이야기하기</span>
+      </div>
+    </div>
+    <a href="#how" class="lift" style="position:absolute;right:20px;bottom:20px;width:min(56%,230px);background:#FFFDFA;border-radius:22px;padding:22px 22px 18px;box-sizing:border-box;display:flex;flex-direction:column;gap:14px;text-decoration:none">
+      <span style="font-size:11px;font-weight:800;color:#6B665E">다정이가 여쭤요</span><span class="jua" style="font-size:clamp(20px,2vw,24px);line-height:1.4;margin-top:-8px">“엄마, 점심은<br>드셨어요?”</span>
+      <span style="align-self:flex-end;width:26px;height:26px;border-radius:50%;background:#FFE59A;display:inline-flex;align-items:center;justify-content:center"><svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="#111111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+    </a>
+  </section>
+</div>
+
+<!-- THIS WEEK -->
+<section data-screen-label="일상의 빈틈" style="background:#FFFDFA;border-radius:28px;padding:clamp(24px,3.4vw,44px);display:flex;flex-direction:column;gap:28px">
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:20px 40px">
+    <div style="display:flex;flex-direction:column;gap:14px;max-width:560px">
+      <span class="lbl" style="color:#6B665E">This week</span>
+      <h2 class="jua" style="margin:0;font-size:clamp(26px,3vw,38px);line-height:1.35">매일 전화 못 드려서<br>마음 쓰이셨죠?</h2>
+      <p style="margin:0;font-size:14px;line-height:1.85;color:#3C3934">주말에 한 번 통화하고 나면, 나머지 닷새는 궁금하기만 하잖아요. 이제 평일엔 다정이가 대신 안부를 여쭐게요.</p>
+      <span class="jua" style="font-size:clamp(20px,2.2vw,26px);line-height:1.4;color:#111111">주말엔 내가, 평일엔 다정이가.</span>
+    </div>
+    <div role="group" aria-label="한 주 보기 전환" style="display:inline-flex;align-items:center;gap:12px">
+      <span id="lblOff" style="font-size:13px;font-weight:700;color:#A39C90;transition:color .25s ease">주말 전화만</span>
+      <button id="djSwitch" type="button" aria-pressed="true" aria-label="다정이와 함께 보기" style="width:64px;height:36px;border:none;border-radius:999px;padding:3px;cursor:pointer;background:#5BBE8E;transition:background-color .25s ease;display:flex">
+        <span id="djKnob" style="width:30px;height:30px;border-radius:50%;background:#FFFDFA;box-shadow:0 1px 3px rgba(17,17,17,.18);transform:translateX(28px);transition:transform .25s cubic-bezier(.65,0,.35,1)"></span>
+      </button>
+      <span id="lblOn" style="font-size:13px;font-weight:700;color:#111111;transition:color .25s ease">평일엔 다정이</span>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:clamp(4px,.8vw,10px)">
+    <div data-slot="week" style="display:contents"></div>
+  </div>
+  <span style="font-size:12px;color:#6B665E">스위치를 켜 보세요. 전화 못 드린 평일이 다정이와 나눈 대화로 채워져요. 대화 시간은 예시예요.</span>
+</section>
+
+<!-- HOW -->
+<section id="how" data-screen-label="작동 방식" style="scroll-margin-top:100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">
+  <div style="background:#FFFDFA;border-radius:28px;padding:clamp(24px,3.4vw,44px);display:flex;flex-direction:column;gap:22px">
+    <span class="lbl" style="color:#6B665E">How it works</span>
+    <h2 class="jua" style="margin:0;font-size:clamp(26px,3vw,38px);line-height:1.35">호칭이랑 말버릇,<br>알려 주기만 하세요.</h2>
+    <p style="margin:0;font-size:14px;line-height:1.85;color:#3C3934">평소 부르는 호칭, 말버릇, 단골 국수집 이야기까지 자녀 앱에 적어 두세요. 다정이가 대화할 때 꺼내 쓸게요.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px">
+      <span style="padding:8px 14px;border-radius:999px;background:#FFE59A;font-size:12px;font-weight:800">호칭 ‘엄마’</span>
+      <span style="padding:8px 14px;border-radius:999px;background:#FFB5C1;font-size:12px;font-weight:800">다정한 존댓말</span>
+      <span style="padding:8px 14px;border-radius:999px;background:#B7E1D1;font-size:12px;font-weight:800">단골 국수집</span>
+    </div>
+    <div style="margin-top:auto;background:#F4F0EA;border-radius:20px 20px 20px 6px;padding:18px 20px;display:flex;flex-direction:column;gap:6px">
+      <span style="font-size:11px;font-weight:800;color:#6B665E">다정이</span>
+      <span class="jua" style="font-size:20px;line-height:1.45">엄마, 어제 말한 그 국수집은 가 보셨어요?</span>
+    </div>
+  </div>
+  <div style="background:#FFFDFA;border-radius:28px;padding:clamp(20px,2.6vw,32px);display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+      <span class="lbl">3 steps</span>
+      <a href="#app" style="display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;text-decoration:none">화면 보기<span style="width:24px;height:24px;border-radius:50%;background:#FFE59A;display:inline-flex;align-items:center;justify-content:center"><svg viewBox="0 0 16 16" width="10" height="10" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="#111111" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,140px),1fr));gap:10px;flex:1">
+      <div class="lift" style="border:1.5px solid #ECE6DC;border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px">
+        <svg viewBox="0 0 120 110" aria-hidden="true" style="width:78%;align-self:center"><path d="M30 18c18-14 42-6 52 4 18-6 36 8 32 30 10 18-2 44-24 46-14 14-40 12-52-2-22 2-36-20-30-40-12-16 0-34 22-38z" fill="#B7E1D1"></path><g class="blink"><ellipse cx="54" cy="66" rx="3.5" ry="5" fill="#111111"></ellipse><ellipse cx="66" cy="66" rx="3.5" ry="5" fill="#111111"></ellipse></g></svg>
+        <span style="font-size:14px;font-weight:800;line-height:1.4">말투 알려 주기</span>
+        <span style="font-size:12px;line-height:1.6;color:#6B665E">호칭이랑 집안 이야기를 앱에 적어 주세요.</span>
+        <span style="margin-top:auto;align-self:flex-start;padding:4px 10px;border-radius:999px;background:#F4F0EA;font-size:11px;font-weight:700">자녀 앱</span>
+      </div>
+      <div class="lift" style="border:1.5px solid #ECE6DC;border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px">
+        <svg viewBox="0 0 120 110" aria-hidden="true" style="width:78%;align-self:center"><path d="M58 8c10-6 22 6 24 14 14-6 30 4 26 20 14 8 10 28-4 32 4 16-12 28-26 22-8 12-26 12-34 0-16 6-30-6-26-22-14-8-12-28 4-32-4-16 14-28 30-20 0-8 2-12 6-14z" fill="#FFB5C1"></path><g class="blink2"><ellipse cx="52" cy="64" rx="3.5" ry="5" fill="#111111"></ellipse><ellipse cx="64" cy="64" rx="3.5" ry="5" fill="#111111"></ellipse></g></svg>
+        <span style="font-size:14px;font-weight:800;line-height:1.4">버튼만 누르면 끝</span>
+        <span style="font-size:12px;line-height:1.6;color:#6B665E">부모님은 ‘다정이랑 이야기하기’만 누르시면 돼요.</span>
+        <span style="margin-top:auto;align-self:flex-start;padding:4px 10px;border-radius:999px;background:#F4F0EA;font-size:11px;font-weight:700">부모님 태블릿</span>
+      </div>
+      <div class="lift" style="border:1.5px solid #ECE6DC;border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px">
+        <svg viewBox="0 0 120 110" aria-hidden="true" style="width:78%;align-self:center"><path d="M60 6c30 0 54 20 54 50s-22 50-54 50S6 84 6 54 30 6 60 6z" fill="#A9D3FF"></path><g class="blink"><ellipse cx="66" cy="48" rx="3.5" ry="5" fill="#111111"></ellipse><ellipse cx="78" cy="48" rx="3.5" ry="5" fill="#111111"></ellipse></g></svg>
+        <span style="font-size:14px;font-weight:800;line-height:1.4">평소랑 비교해 봐요</span>
+        <span style="font-size:12px;line-height:1.6;color:#6B665E">부모님의 처음 2주를 기준으로 달라진 점을 봐요.</span>
+        <span style="margin-top:auto;align-self:flex-start;padding:4px 10px;border-radius:999px;background:#F4F0EA;font-size:11px;font-weight:700">자녀 앱</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- APP -->
+<section id="app" data-screen-label="자녀 앱" style="scroll-margin-top:100px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px;align-items:stretch">
+  <div style="background:#FFFDFA;border-radius:28px;padding:32px 0;display:flex;justify-content:center;align-items:center">
+    <div style="width:270px;max-width:84%;height:560px;border:7px solid #111111;border-radius:40px;background:#FFFDFA;padding:42px 16px 16px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px;overflow:hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="display:flex;align-items:center;gap:6px"><svg viewBox="0 0 120 100" width="22" height="19" aria-hidden="true"><path d="M58 6c30-4 56 14 58 44s-20 46-54 48S4 86 4 54 28 10 58 6z" fill="#111111"></path><ellipse cx="64" cy="44" rx="8" ry="11" fill="#FFFDFA"></ellipse><ellipse cx="88" cy="46" rx="8" ry="11" fill="#FFFDFA"></ellipse></svg><span class="jua" style="font-size:14px">어머니의 한 주</span></span>
+        <span style="width:28px;height:28px;border-radius:50%;border:1.5px solid #ECE6DC;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 20 20" width="12" height="12" aria-hidden="true"><path d="M5 7h10M5 10h10M5 13h10" stroke="#111111" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+      </div>
+      <div style="position:relative;background:#B7E1D1;border-radius:22px;padding:16px;min-height:136px;box-sizing:border-box;overflow:hidden;display:flex;flex-direction:column;gap:6px">
+        <span style="font-size:10px;font-weight:800">이번 주</span>
+        <span class="jua" style="font-size:26px;line-height:1.2">평소와<br>같습니다</span>
+        <span style="display:flex;gap:8px;font-size:10px;font-weight:700;margin-top:auto"><span>대화 5회</span><span>평균 12분</span></span>
+        <svg viewBox="0 0 120 100" aria-hidden="true" style="position:absolute;right:-14px;bottom:-16px;width:92px"><path d="M58 6c30-4 56 14 58 44s-20 46-54 48S4 86 4 54 28 10 58 6z" fill="#FFFDFA"></path><g class="blink2"><ellipse cx="54" cy="40" rx="4" ry="6" fill="#111111"></ellipse><ellipse cx="68" cy="41" rx="4" ry="6" fill="#111111"></ellipse></g></svg>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <div data-slot="metrics" style="display:contents"></div>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:3px;height:44px;margin-top:auto"><div data-slot="bars" style="display:contents"></div></div>
+    </div>
+  </div>
+  <div style="background:#FFFDFA;border-radius:28px;padding:clamp(24px,3.4vw,44px);display:flex;flex-direction:column;gap:22px">
+    <span class="lbl" style="color:#6B665E">Family app</span>
+    <h2 class="jua" style="margin:0;font-size:clamp(26px,3vw,38px);line-height:1.35">오늘 엄마가 무슨 얘기 하셨는지,<br>앱에서 보세요.</h2>
+    <p style="margin:0;font-size:14px;line-height:1.85;color:#3C3934">부모님은 이야기만 하시면 돼요. 대화가 끝나면 자녀 앱에 이렇게 정리돼요.</p>
+    <div style="display:flex;flex-direction:column">
+      <div data-slot="guardianFlow" style="display:contents"></div>
+    </div>
+    <span style="font-size:12px;line-height:1.6;color:#6B665E">처음 2주는 ‘평소 기준을 모으는 중입니다’로 표시돼요. 지표는 참고 정보이며 의료 진단이 아닙니다.</span>
+  </div>
+</section>
+
+<!-- BEFORE AFTER -->
+<section data-screen-label="이용 전후" style="background:#FFFDFA;border-radius:28px;padding:clamp(24px,3.4vw,44px);display:flex;flex-direction:column;gap:26px">
+  <div style="display:flex;flex-direction:column;gap:14px;max-width:560px">
+    <span class="lbl" style="color:#6B665E">Before / After</span>
+    <h2 class="jua" style="margin:0;font-size:clamp(26px,3vw,38px);line-height:1.35">다음 통화엔<br>할 말이 많아져요.</h2>
+    <p style="margin:0;font-size:14px;line-height:1.85;color:#3C3934">이번 주 엄마 이야기를 알고 전화하면, ‘별일 없으시죠?’로 끝나지 않거든요.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px">
+    <div style="border:1.5px dashed #DCD5C9;border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:12px">
+      <span style="align-self:flex-start;padding:4px 10px;border-radius:999px;background:#F4F0EA;font-size:11px;font-weight:800">예전 통화</span>
+      <span style="font-size:15px;line-height:1.7;color:#6B665E">“별일 없으시죠?” 하면 “응, 별일 없어”로 끝났어요.</span>
+      <span style="font-size:15px;line-height:1.7;color:#6B665E">괜찮으신지는 목소리만 듣고 짐작했어요.</span>
+    </div>
+    <div style="position:relative;background:#FFE59A;border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:12px;overflow:hidden">
+      <span style="align-self:flex-start;padding:4px 10px;border-radius:999px;background:#FFFDFA;font-size:11px;font-weight:800">다정이랑 함께한 뒤</span>
+      <span style="font-size:15px;line-height:1.7;font-weight:800;max-width:80%">“국수집은 결국 가 보셨어요?” 하고 이번 주 이야기로 시작해요.</span>
+      <span style="font-size:15px;line-height:1.7;font-weight:800;max-width:80%">요즘 말씀이 평소랑 같은지 앱에서 먼저 확인해요.</span>
+      <svg viewBox="0 0 120 100" aria-hidden="true" style="position:absolute;right:-12px;bottom:-14px;width:96px"><path d="M58 6c30-4 56 14 58 44s-20 46-54 48S4 86 4 54 28 10 58 6z" fill="#FFFDFA"></path><g class="blink"><ellipse cx="54" cy="40" rx="4" ry="6" fill="#111111"></ellipse><ellipse cx="68" cy="41" rx="4" ry="6" fill="#111111"></ellipse></g></svg>
+    </div>
+  </div>
+  <span style="font-size:12px;color:#6B665E">이해를 돕기 위한 예시 장면입니다.</span>
+</section>
+
+<!-- RECRUIT + PROCESS -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px">
+  <a href="#apply" data-screen-label="참여 가정 모집" class="lift" style="position:relative;background:#FFE59A;border-radius:28px;padding:clamp(24px,3.4vw,40px);min-height:300px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;text-decoration:none;overflow:hidden">
+    <svg class="float" viewBox="0 0 200 160" aria-hidden="true" style="position:absolute;right:10%;top:-4%;width:min(46%,200px)"><path d="M56 22c22-18 60-16 74 0 26-8 56 10 52 40 18 16 6 52-22 56-12 22-50 28-70 10-28 8-62-12-58-40-22-18-6-56 24-66z" fill="#FFFDFA"></path><g class="blink2"><ellipse cx="128" cy="62" rx="6" ry="8.5" fill="#111111"></ellipse><ellipse cx="148" cy="64" rx="6" ry="8.5" fill="#111111"></ellipse><ellipse cx="84" cy="98" rx="4" ry="5.5" fill="#111111"></ellipse><ellipse cx="96" cy="99" rx="4" ry="5.5" fill="#111111"></ellipse></g></svg>
+    <span class="lbl">Beta</span>
+    <span class="jua" style="font-size:clamp(24px,2.6vw,32px);line-height:1.4">우리 집에서<br>먼저 써 보실래요?</span>
+    <span style="font-size:13px;line-height:1.7;color:#3C3934;max-width:300px">다정이는 지금 베타 테스트 중이에요. 부모님이 혼자서도 잘 쓰시는지, 정말 마음이 놓이는지 직접 써 보고 알려 주세요.</span>
+    <span style="position:absolute;right:24px;bottom:24px;width:52px;height:52px;border-radius:50%;background:#FFFDFA;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="#111111" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+  </a>
+  <section data-screen-label="진행 과정" style="background:#FFFDFA;border-radius:28px;padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">신청하시면</span><span style="font-size:12px;font-weight:700;color:#6B665E">이렇게 진행돼요</span></div>
+    <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column">
+      <div data-slot="steps" style="display:contents"></div>
+    </ol>
+  </section>
+</div>
+
+<!-- APPLY -->
+<section id="apply" data-screen-label="베타 신청" style="scroll-margin-top:100px;background:#FFFDFA;border-radius:28px;padding:clamp(24px,3.4vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:clamp(28px,4vw,64px);align-items:start">
+  <div style="display:flex;flex-direction:column;gap:18px">
+    <span class="lbl" style="color:#6B665E">Apply</span>
+    <h2 class="jua" style="margin:0;font-size:clamp(26px,3vw,38px);line-height:1.35">신청은 여기서<br>해 주세요.</h2>
+    <p style="margin:0;font-size:14px;line-height:1.85;color:#3C3934">참여 조건은 정해지는 대로 알려 드릴게요. 지금은 연락처랑 부모님 정보만 남겨 주시면 돼요.</p>
+    <div style="display:flex;flex-direction:column;margin-top:6px">
+      <div data-slot="conditions" style="display:contents"></div>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:18px">
+    <form id="applyForm" novalidate style="display:flex;flex-direction:column;gap:18px">
+      <div role="radiogroup" aria-label="신청 유형" style="display:flex;gap:16px">
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;cursor:pointer"><input type="radio" name="type" value="home" checked style="width:18px;height:18px;margin:0;accent-color:#111111">가정용</label>
+        <label style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;cursor:pointer"><input type="radio" name="type" value="org" style="width:18px;height:18px;margin:0;accent-color:#111111">기관용</label>
+      </div>
+      <label data-show="org" hidden style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12px;font-weight:800">기관명</span><input name="org" placeholder="기관 이름" style="height:48px;border:1.5px solid #D9D2C6;border-radius:10px;padding:0 16px;font-size:14px;background:#FFFDFA;color:#111111;outline:none;box-sizing:border-box"></label>
+      <label style="display:flex;flex-direction:column;gap:7px">
+        <span id="nameLabel" style="font-size:12px;font-weight:800">신청자 이름</span>
+        <input id="nameInput" name="name" placeholder="이름" style="height:48px;border:1.5px solid #D9D2C6;border-radius:10px;padding:0 16px;font-size:14px;background:#FFFDFA;color:#111111;outline:none;box-sizing:border-box;transition:border-color .2s ease">
+        <span id="nameError" hidden style="font-size:12px;font-weight:700;color:#C2414F">이름을 입력해 주세요.</span>
+      </label>
+      <label style="display:flex;flex-direction:column;gap:7px">
+        <span style="font-size:12px;font-weight:800">연락받을 수단</span>
+        <input name="contact" placeholder="휴대폰 번호 또는 이메일" style="height:48px;border:1.5px solid #D9D2C6;border-radius:10px;padding:0 16px;font-size:14px;background:#FFFDFA;color:#111111;outline:none;box-sizing:border-box">
+      </label>
+      <div data-show="home" style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;font-weight:800">부모님 연령대</span>
+        <div data-chips="age" data-options="60대,70대,80대 이상" data-value="70대" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      </div>
+      <div data-show="home" style="display:flex;flex-direction:column;gap:8px">
+        <span style="font-size:12px;font-weight:800">태블릿 보유 여부</span>
+        <div data-chips="tablet" data-options="있음,없음" data-value="있음" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      </div>
+      <label data-show="org" hidden style="display:flex;flex-direction:column;gap:7px"><span style="font-size:12px;font-weight:800">검토 중인 이용 규모</span>
+        <select name="scale" style="height:48px;border:1.5px solid #D9D2C6;border-radius:10px;padding:0 14px;font-size:14px;background:#FFFDFA;color:#111111"><option>10가정 이하</option><option>11~50가정</option><option>51가정 이상</option></select></label>
+      <label style="display:flex;align-items:flex-start;gap:10px;font-size:13px;line-height:1.55;cursor:pointer"><input type="checkbox" name="agree" style="width:18px;height:18px;margin:1px 0 0;accent-color:#111111;flex:none"><span>신청 확인과 선정 안내를 위한 개인정보 수집·이용에 동의합니다. <a href="/privacy.html" target="_blank" rel="noopener" style="font-weight:700">내용 보기</a></span></label>
+      <button class="pill" type="submit" style="align-self:flex-start;display:inline-flex;align-items:center;gap:18px;height:52px;padding:0 10px 0 26px;border:none;border-radius:999px;background:#111111;color:#FFFDFA;font-size:14px;font-weight:700;cursor:pointer">베타 신청하기<span class="arw" style="width:32px;height:32px;border-radius:50%;background:#FFE59A;display:inline-flex;align-items:center;justify-content:center"><svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5" stroke="#111111" stroke-width="1.9" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button>
+    </form>
+    <div id="applyDone" hidden style="display:flex;flex-direction:column;align-items:flex-start;gap:16px;padding:8px 0">
+      <svg viewBox="0 0 120 100" width="96" aria-hidden="true"><path d="M58 6c30-4 56 14 58 44s-20 46-54 48S4 86 4 54 28 10 58 6z" fill="#B7E1D1"></path><path d="M46 44q6-8 12 0M66 45q6-8 12 0" stroke="#111111" stroke-width="4" fill="none" stroke-linecap="round"></path></svg>
+      <span class="jua" style="font-size:26px">신청해 주셔서 고마워요!</span>
+      <span style="font-size:14px;line-height:1.8;color:#3C3934">아직 참여가 확정된 건 아니에요. 신청서를 살펴본 뒤, 결과를 남겨 주신 연락처로 알려 드릴게요.</span>
+      <button id="applyReset" class="pill" type="button" style="height:46px;padding:0 22px;border-radius:999px;border:1.5px solid #111111;background:transparent;color:#111111;font-size:13px;font-weight:800;cursor:pointer">처음으로</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ + TEAM -->
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-start">
+  <section id="faq" data-screen-label="자주 묻는 질문" style="scroll-margin-top:100px;flex:2 1 560px;min-width:0;background:#FFFDFA;border-radius:28px;padding:clamp(24px,3.4vw,44px);display:flex;flex-direction:column;gap:18px">
+    <span class="lbl" style="color:#6B665E">FAQ</span>
+    <h2 class="jua" style="margin:0;font-size:clamp(26px,3vw,38px);line-height:1.35">이런 게 궁금하셨죠?</h2>
+    <div style="display:flex;flex-direction:column">
+      <div data-slot="faqs" style="display:contents"></div>
+    </div>
+  </section>
+  <section data-screen-label="만든 사람들" style="flex:1 1 300px;min-width:0;background:#FFFDFA;border-radius:28px;padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:16px">
+    <span class="lbl" style="color:#6B665E">Team</span>
+    <span class="jua" style="font-size:24px;line-height:1.4">다정이를<br>만드는 사람들</span>
+    <div style="display:flex;flex-direction:column">
+      <div style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid #F0EAE0;font-size:13px"><span style="color:#6B665E">운영 주체</span><span style="font-weight:800;color:#A39C90">[팀명, 확인 후 기재]</span></div>
+      <div style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid #F0EAE0;font-size:13px"><span style="color:#6B665E">만든 사람</span><span style="font-weight:800;color:#A39C90">[이름, 역할]</span></div>
+      <div style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;padding:12px 0;border-bottom:1px solid #F0EAE0;font-size:13px"><span style="color:#6B665E">대화 기록</span><span style="font-weight:800;color:#A39C90">[열람·보관·삭제 정책 링크]</span></div>
+      <div style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:10px;padding:12px 0;font-size:13px"><span style="color:#6B665E">문의</span><span style="font-weight:800;color:#A39C90">[이메일]</span></div>
+    </div>
+  </section>
+</div>
+
+<!-- FOOTER -->
+<footer style="position:relative;margin-top:14px">
+  <svg viewBox="0 0 1200 24" preserveAspectRatio="none" aria-hidden="true" style="display:block;width:100%;height:20px"><path d="M0 24V14C25 4 50 4 75 14S125 24 150 14 200 4 225 14 275 24 300 14 350 4 375 14 425 24 450 14 500 4 525 14 575 24 600 14 650 4 675 14 725 24 750 14 800 4 825 14 875 24 900 14 950 4 975 14 1025 24 1050 14 1100 4 1125 14 1175 24 1200 14V24Z" fill="#FFFDFA"></path></svg>
+  <div style="position:relative;background:#FFFDFA;border-radius:0 0 28px 28px;padding:clamp(24px,3.4vw,44px);display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px 48px;overflow:hidden;min-height:240px;box-sizing:border-box">
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <span style="display:flex;align-items:center;gap:10px"><svg viewBox="0 0 120 100" width="40" height="34" aria-hidden="true"><path d="M58 6c30-4 56 14 58 44s-20 46-54 48S4 86 4 54 28 10 58 6z" fill="#111111"></path><ellipse cx="64" cy="44" rx="8" ry="11" fill="#FFFDFA"></ellipse><ellipse cx="88" cy="46" rx="8" ry="11" fill="#FFFDFA"></ellipse></svg><span class="jua" style="font-size:21px">다정이</span></span>
+      <span style="font-size:12px;line-height:1.8;color:#6B665E;max-width:280px">지표는 부모님 본인의 처음 2주와 비교한 참고 정보이며 의료 진단이 아닙니다.</span>
+      <span style="font-size:12px;color:#6B665E">[이메일]</span>
+    </div>
+    <div style="display:flex;gap:clamp(28px,5vw,64px);flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Service</span><a href="#how" style="font-size:12px;color:#3C3934;text-decoration:none">사용 방법</a><a href="#app" style="font-size:12px;color:#3C3934;text-decoration:none">자녀 앱</a></div>
+      <div style="display:flex;flex-direction:column;gap:10px"><span class="lbl">Beta</span><a href="#apply" style="font-size:12px;color:#3C3934;text-decoration:none">신청하기</a><a href="#faq" style="font-size:12px;color:#3C3934;text-decoration:none">자주 묻는 질문</a></div>
+    </div>
+    <svg class="float2" viewBox="0 0 160 120" aria-hidden="true" style="position:absolute;left:clamp(180px,34%,420px);bottom:-22px;width:120px"><path d="M70 10c34-6 76 14 80 50s-26 56-70 58S6 104 8 70 36 16 70 10z" fill="#FFB5C1"></path><g class="blink"><ellipse cx="88" cy="48" rx="5" ry="7" fill="#111111"></ellipse><ellipse cx="104" cy="50" rx="5" ry="7" fill="#111111"></ellipse></g></svg>
+  </div>
+</footer>
+</div>
+
+<script>
+(() => {
+  // ---------- data (copy & example values: keep verbatim) ----------
+  const PASTEL = ['#FFE59A', '#FFB5C1', '#B7E1D1', '#A9D3FF'];
+  const DOT = { normal: '#5BBE8E', watch: '#F2B33D' };
+  const DATA = {
+    week: ['일', '월', '화', '수', '목', '금', '토'],
+    weekMins: [0, 12, 15, 10, 18, 14, 0],
+    metrics: [
+      ['응답 간격', '2.1', '초', 'normal'], ['발화 길이', '34', '자', 'normal'], ['같은 표현 반복', '8', '%', 'watch'],
+      ['불확실한 표현', '5', '%', 'normal'], ['대화 참여', '92', '%', 'normal'],
+    ],
+    bars: [12, 15, 0, 10, 18, 14, 9, 0, 16, 20, 11, 24, 13, 14],
+    guardianFlow: [
+      ['이번 주 한 줄 요약', '‘평소와 같습니다’처럼 한 줄로 먼저 보여 드려요.'],
+      ['대화 지표 5개', '응답 간격, 발화 길이, 같은 표현 반복, 불확실한 표현, 대화 참여'],
+      ['14일 흐름', '대화 시간과 응답 간격을 날짜별로 볼 수 있어요.'],
+      ['대화 원문과 AI 요약', '무슨 이야기를 나누셨는지 직접 읽어 보세요.'],
+    ],
+    steps: ['신청서 접수', '참여 가정 선정과 연락', '태블릿 연결과 말투 설정', '다정이와 대화 시작'],
+    conditions: ['대상 가정', '테스트 기간', '비용', '태블릿 준비', '참여자가 할 일'],
+    faqs: [
+      ['다정이는 정확히 뭔가요?', '자녀 대신 부모님께 안부를 여쭙는 AI예요. 부모님 태블릿에서 자녀가 쓰는 호칭과 말투로 이야기를 나누고, 나눈 대화는 자녀 앱에서 볼 수 있습니다.'],
+      ['부모님이 기기를 잘 다루지 못하셔도 괜찮나요?', '처음 한 번만 가족 코드로 태블릿을 연결하면 됩니다. 그다음부터 부모님은 화면의 ‘다정이랑 이야기하기’ 버튼만 누르시면 돼요.'],
+      ['다정이가 자녀처럼 말하게 하려면 어떻게 하나요?', '자녀 앱에 부모님을 부르는 호칭, 평소 말투, 자주 쓰는 표현, 가족 이야기를 적어 두시면 다정이가 대화에 그대로 반영합니다.'],
+      ['자녀 앱에서는 무엇을 볼 수 있나요?', '이번 주 한 줄 요약, 대화 지표 5개, 대화 원문과 AI 요약을 볼 수 있어요. 지표는 부모님의 처음 2주와 비교한 참고 정보이며 의료 진단이 아닙니다.'],
+      ['베타 비용과 태블릿 준비는 어떻게 되나요?', '[확정된 비용, 제공 범위, 참여 조건을 기재합니다.]'],
+      ['부모님의 대화 기록은 누가 볼 수 있나요?', '[실제 열람 권한, 보관 기간, 삭제 방법을 기재합니다.]'],
+    ],
+  };
+
+  const EASE_OUT = 'cubic-bezier(.16,1,.3,1)';
+  const EASE_INOUT = 'cubic-bezier(.65,0,.35,1)';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const slot = (name, html) => { $(`[data-slot="${name}"]`).outerHTML = html; };
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  // ---------- THIS WEEK ----------
+  slot('week', DATA.week.map((d, i) => {
+    const call = i === 0 || i === 6;
+    const bottom = call
+      ? '<span style="padding:5px 9px;border-radius:999px;background:#FFB5C1;font-size:clamp(10px,1vw,12px);font-weight:800;white-space:nowrap">안부 전화</span>'
+      : `<div data-dj="${i}" style="display:flex;flex-direction:column;gap:4px;opacity:1;transform:none;transform-origin:0 100%;transition:opacity .45s ${EASE_OUT} ${i * 70}ms,transform .45s ${EASE_OUT} ${i * 70}ms">
+            <svg viewBox="0 0 100 86" aria-hidden="true" style="width:clamp(26px,3.2vw,40px)"><path d="M48 4c26-2 48 12 48 40s-18 40-46 40S2 70 4 42 22 6 48 4z" fill="#FFE59A"></path><ellipse cx="54" cy="36" rx="5" ry="7" fill="#111111"></ellipse><ellipse cx="68" cy="37" rx="5" ry="7" fill="#111111"></ellipse></svg>
+            <span style="font-size:clamp(10px,1vw,13px);font-weight:800">${DATA.weekMins[i]}분</span>
+          </div>`;
+    return `<div style="min-height:clamp(104px,12vw,150px);border-radius:clamp(14px,1.8vw,20px);border:1.5px solid #ECE6DC;background:#FFFDFA;padding:clamp(8px,1vw,14px);box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;overflow:hidden">
+        <span style="font-size:13px;font-weight:800;color:#6B665E">${d}</span>${bottom}</div>`;
+  }).join(''));
+
+  let withDj = true;
+  const sw = $('#djSwitch');
+  sw.addEventListener('click', () => {
+    withDj = !withDj;
+    sw.setAttribute('aria-pressed', String(withDj));
+    sw.style.background = withDj ? '#5BBE8E' : '#D9D2C6';
+    $('#djKnob').style.transform = withDj ? 'translateX(28px)' : 'none';
+    $('#lblOff').style.color = withDj ? '#A39C90' : '#111111';
+    $('#lblOn').style.color = withDj ? '#111111' : '#A39C90';
+    $$('[data-dj]').forEach((el) => {
+      const i = +el.dataset.dj;
+      const delay = withDj ? `${i * 70}ms` : '0ms';
+      el.style.transition = `opacity .45s ${EASE_OUT} ${delay},transform .45s ${EASE_OUT} ${delay}`;
+      el.style.opacity = withDj ? '1' : '0';
+      el.style.transform = withDj ? 'none' : 'translateY(10px) scale(.5)';
+    });
+  });
+
+  // ---------- FAMILY APP mock ----------
+  slot('metrics', DATA.metrics.map(([n, v, u, k]) => `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 2px;border-bottom:1px solid #F0EAE0">
+            <span style="display:flex;align-items:center;gap:7px;font-size:11px;font-weight:600"><i style="width:7px;height:7px;border-radius:50%;background:${DOT[k]}"></i>${n}</span>
+            <span style="font-size:12px;font-weight:800">${v}${u}</span></div>`).join(''));
+  slot('bars', DATA.bars.map((m, i) => `<i style="flex:1;height:${m ? Math.round(m / 24 * 100) : 8}%;background:${m ? (i === 13 ? '#111111' : '#B7E1D1') : '#EEE8DE'};border-radius:4px 4px 2px 2px"></i>`).join(''));
+  slot('guardianFlow', DATA.guardianFlow.map(([t, d], i) => `<div style="display:grid;grid-template-columns:14px minmax(0,1fr);gap:12px;padding:15px 0;border-bottom:1px solid #F0EAE0">
+          <i style="width:10px;height:10px;border-radius:50%;background:${PASTEL[i]};margin-top:5px"></i>
+          <div style="display:flex;flex-direction:column;gap:3px"><span style="font-size:14px;font-weight:800">${t}</span><span style="font-size:12px;line-height:1.6;color:#6B665E">${d}</span></div></div>`).join(''));
+
+  // ---------- PROCESS / CONDITIONS ----------
+  slot('steps', DATA.steps.map((t, i) => `<li style="display:grid;grid-template-columns:14px 56px minmax(0,1fr);align-items:center;gap:10px;padding:15px 0;border-bottom:1px solid #F0EAE0">
+          <i style="width:10px;height:10px;border-radius:50%;background:${PASTEL[i]}"></i>
+          <span style="font-size:11px;font-weight:800;color:#6B665E">STEP ${i + 1}</span>
+          <span style="font-size:14px;font-weight:700">${t}</span></li>`).join(''));
+  slot('conditions', DATA.conditions.map((k) => `<div style="display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:1px solid #F0EAE0;font-size:13px"><span style="color:#6B665E">${k}</span><span style="font-weight:800">확정 후 안내</span></div>`).join(''));
+
+  // ---------- FAQ (accordion, one open at a time) ----------
+  slot('faqs', DATA.faqs.map(([q, a], i) => `<div style="border-bottom:1px solid #F0EAE0">
+          <button type="button" data-faq="${i}" aria-expanded="false" style="width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0;background:none;border:none;text-align:left;cursor:pointer;color:#111111">
+            <span style="font-size:15px;font-weight:800;line-height:1.5">${q}</span>
+            <span data-icon style="flex:none;width:30px;height:30px;border-radius:50%;background:#F4F0EA;display:flex;align-items:center;justify-content:center;transform:none;transition:transform .3s ${EASE_INOUT},background-color .3s ease"><svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="#111111" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+          </button>
+          <div data-panel style="display:grid;grid-template-rows:0fr;transition:grid-template-rows .32s ${EASE_INOUT}">
+            <div style="overflow:hidden"><p style="margin:0;padding:0 44px 20px 0;font-size:14px;line-height:1.85;color:#3C3934">${a}</p></div>
+          </div></div>`).join(''));
+  let openFaq = -1;
+  const setFaq = (idx) => {
+    openFaq = idx;
+    $$('[data-faq]').forEach((b) => {
+      const on = +b.dataset.faq === idx;
+      b.setAttribute('aria-expanded', String(on));
+      const icon = $('[data-icon]', b);
+      icon.style.transform = on ? 'rotate(45deg)' : 'none';
+      icon.style.background = on ? '#FFE59A' : '#F4F0EA';
+      b.nextElementSibling.style.gridTemplateRows = on ? '1fr' : '0fr';
+    });
+  };
+  $$('[data-faq]').forEach((b) => b.addEventListener('click', () => setFaq(openFaq === +b.dataset.faq ? -1 : +b.dataset.faq)));
+  setFaq(0);
+
+  // ---------- APPLY form ----------
+  const form = $('#applyForm');
+  const setType = (t) => {
+    $$('[data-show]', form).forEach((el) => { el.hidden = el.dataset.show !== t; });
+    $('#nameLabel').textContent = t === 'org' ? '담당자 이름' : '신청자 이름';
+  };
+  $$('input[name="type"]', form).forEach((r) => r.addEventListener('change', () => setType(r.value)));
+
+  $$('[data-chips]', form).forEach((group) => {
+    const opts = group.dataset.options.split(',');
+    const paint = () => $$('button', group).forEach((b, i) => {
+      const on = b.textContent === group.dataset.value;
+      b.setAttribute('aria-pressed', String(on));
+      b.style.background = on ? '#111111' : PASTEL[i % 4];
+      b.style.color = on ? '#FFFDFA' : '#111111';
+    });
+    group.innerHTML = opts.map((o) => `<button type="button" style="height:40px;padding:0 16px;border-radius:999px;border:none;font-size:13px;font-weight:800;cursor:pointer;transition:background-color .2s ease,color .2s ease">${esc(o)}</button>`).join('');
+    $$('button', group).forEach((b) => b.addEventListener('click', () => { group.dataset.value = b.textContent; paint(); }));
+    paint();
+  });
+
+  const nameInput = $('#nameInput');
+  const showNameError = (on) => { $('#nameError').hidden = !on; nameInput.style.borderColor = on ? '#C2414F' : '#D9D2C6'; };
+  nameInput.addEventListener('input', () => { if (nameInput.value.trim()) showNameError(false); });
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!nameInput.value.trim()) { showNameError(true); nameInput.focus(); return; }
+    // 신청 저장: POST /api/applications (백오피스 '신청 접수'에 표시)
+    const f = new FormData(form); const type = f.get('type'); const contact = String(f.get('contact') || '').trim();
+    const chips = (k) => { const g = $(`[data-chips="${k}"]`, form); return g ? g.dataset.value : ''; };
+    const body = {
+      kind: type, name: nameInput.value.trim(), org_name: type === 'org' ? (f.get('org') || null) : null,
+      phone: contact.includes('@') ? '' : contact, email: contact.includes('@') ? contact : null,
+      message: type === 'org' ? `이용 규모: ${f.get('scale')}` : `부모님 연령대: ${chips('age')} · 태블릿: ${chips('tablet')}`,
+      agreed: !!f.get('agree'),
+    };
+    if (!body.agreed) { alert('개인정보 수집·이용에 동의해 주세요.'); return; }
+    if (!contact) { alert('연락받을 수단을 입력해 주세요.'); return; }
+    if (!body.phone) body.phone = '이메일 연락';
+    const btn = $('button[type="submit"]', form); btn.disabled = true;
+    try {
+      const r = await fetch('/api/applications', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
+      if (!r.ok) { const d = await r.json().catch(() => ({})); throw new Error(d.detail && typeof d.detail === 'string' ? d.detail : '신청을 저장하지 못했어요. 잠시 후 다시 시도해 주세요.'); }
+      form.hidden = true;
+      $('#applyDone').hidden = false;
+    } catch (err) { alert(err.message); } finally { btn.disabled = false; }
+  });
+  $('#applyReset').addEventListener('click', () => {
+    form.reset(); setType('home'); showNameError(false);
+    $('#applyDone').hidden = true; form.hidden = false;
+  });
+})();
+
+</script>
+</body>
+</html>

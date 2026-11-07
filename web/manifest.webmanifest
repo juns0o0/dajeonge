@@ -1,0 +1,9 @@
+{
+  "name": "다정이 보호자",
+  "short_name": "다정이",
+  "start_url": "/app.html",
+  "display": "standalone",
+  "background_color": "#F4F6EE",
+  "theme_color": "#CBEF5C",
+  "icons": [{ "src": "/assets/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

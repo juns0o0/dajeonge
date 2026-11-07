@@ -1,0 +1,46 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="diagram.css"><link rel="stylesheet" href="fonts.css"></head><body>
+<h1 id="title"></h1><p class="sub" id="subtitle"></p><div id="canvas"></div>
+<script>
+const N = (id, x, y, title, lines, tone, w = 170) => ({ id, x, y, w, title, lines, tone });
+window.DIAGRAM = {
+  title: '다정이 MVP 정보구조도 (IA)', subtitle: '화면 4종 · 깊이별 화면과 주요 요소 · 괄호는 접근 역할', width: 1240, height: 980,
+  groups: [{ x: 20, y: 20, w: 330, h: 660, label: '랜딩 (누구나)' }, { x: 370, y: 20, w: 300, h: 660, label: '태블릿 (부모님 · tablet 역할)', tone: 'lime' }, { x: 690, y: 20, w: 530, h: 560, label: '보호자 앱 (guardian 역할)' }, { x: 20, y: 700, w: 1200, h: 260, label: '백오피스 · 데이터 관리 (운영자 · X-Admin-Token) — 같은 API 를 외부 시스템이 호출', tone: 'dark' }],
+  nodes: [
+    N('L', 100, 60, '/ 랜딩페이지', ['1페이지 스크롤'], 'dark'),
+    N('L1', 40, 150, '히어로 · 태블릿', ['한 주 토글 · 작동 방식'], '', 140), N('L2', 200, 150, '자녀 앱 · 이용 전후', ['참여 가정 모집'], '', 140),
+    N('L3', 40, 250, '진행 과정', ['4단계'], '', 140), N('L4', 200, 250, '자주 묻는 질문', ['6문항 · 하나만 열림'], '', 140),
+    N('L5', 40, 350, '신청 폼', ['가정용 / 기관용', '동의 체크 → POST /applications'], 'soft', 140), N('L6', 200, 350, '만든 사람들 · 푸터', ['/privacy.html 링크'], '', 140),
+    N('T', 435, 60, '/tablet.html', ['전체화면 키오스크'], 'dark'),
+    N('T1', 435, 150, '연결', ['가족 코드 + 태블릿 비밀번호', '기기에 토큰 저장'], 'lime'),
+    N('T2', 435, 250, '대기 화면', ['시계 · 아바타', '버튼 1개 “다정이랑 이야기하기”'], 'lime'),
+    N('T3', 435, 360, '대화 화면', ['다정이 자막(TTS) · 부모님 자막', '상태: 말하는 중 / 듣는 중', '글로 말하기 전환'], 'lime'),
+    N('T4', 435, 480, '종료', ['대화 마치기 → 전달 완료', '3분 무응답 자동 종료'], 'lime'),
+    N('G', 850, 60, '/app.html 로그인', ['가족 코드 + 보호자 비밀번호'], 'dark', 200),
+    N('G1', 710, 160, '홈 #home', ['이번 주 상태 · 지표 5', '14일 그래프 · 마지막 대화'], 'soft', 160),
+    N('G1a', 710, 270, '지표 상세 #metric/{k}', ['측정 방법 · 평소 값 · 일별'], '', 160),
+    N('G1b', 710, 360, '주간 AI 요약 #report', ['평소/이번 주 표 · 요약 생성'], '', 160),
+    N('G2', 890, 160, '대화 기록 #talks', ['월별 목록'], 'soft', 150),
+    N('G2a', 890, 270, '대화 상세 #talk/{id}', ['지표 표 · 원문 · 태그', 'AI 요약 · 삭제'], '', 150),
+    N('G3', 1060, 160, '가족 정보 #family', ['부모님·보호자', '페르소나 · 가족 이야기'], 'soft', 145),
+    N('G3a', 1060, 270, '가족 이야기 추가/수정', ['제목·내용·키워드·연도'], '', 145),
+    N('G4', 890, 470, '설정 #more', ['태블릿 연결 안내', '처리 작업 · 재시도', '개인정보 · 로그아웃'], 'soft', 150),
+    N('B', 40, 740, '/admin.html 토큰 로그인', ['운영자 토큰'], 'dark', 170),
+    N('B1', 240, 740, '현황 #home', ['가족·대화·신청·작업 수', '최근 작업 · 연락 전 신청'], 'soft', 170),
+    N('B2', 440, 740, '가족 #families', ['검색 · 가족 등록'], 'soft', 160),
+    N('B2a', 440, 850, '가족 상세 #family/{id}', ['정보 · 페르소나 · 기준선', '대화 · 작업 · 수정 · 삭제', 'JSON 내보내기'], '', 160),
+    N('B3', 630, 740, '대화 기록 #talks', ['가족·상태 필터 · 지표 표'], 'soft', 160),
+    N('B3a', 630, 850, '대화 상세 #talk/{id}', ['지표 · 원문 · 태그'], '', 160),
+    N('B4', 820, 740, '신청 접수 #apps', ['상태(신규·연락함·완료)', '메모'], 'soft', 150),
+    N('B5', 820, 850, '처리 작업 #jobs', ['상태 필터 · 다시 시도'], 'soft', 150),
+    N('B6', 1000, 740, 'API 사용량 #usage', ['목적별 집계 · 최근 호출'], 'soft', 200),
+    N('B7', 1000, 850, '연동 안내 #api · /docs', ['인증 · 엔드포인트 · 예시'], 'soft', 200),
+  ],
+  edges: [
+    { from: 'L', to: 'L1' }, { from: 'L', to: 'L2' }, { from: 'L1', to: 'L3', end: 'none', dash: true }, { from: 'L2', to: 'L4', end: 'none', dash: true }, { from: 'L3', to: 'L5', end: 'none', dash: true }, { from: 'L4', to: 'L6', end: 'none', dash: true },
+    { from: 'T', to: 'T1' }, { from: 'T1', to: 'T2' }, { from: 'T2', to: 'T3' }, { from: 'T3', to: 'T4' }, { from: 'T4', to: 'T2', sides: ['right', 'right'], dash: true, label: '다시 대기' },
+    { from: 'G', to: 'G1' }, { from: 'G', to: 'G2' }, { from: 'G', to: 'G3' }, { from: 'G', to: 'G4', sides: ['bottom', 'right'], dash: true },
+    { from: 'B', to: 'B1' }, { from: 'B1', to: 'B2' }, { from: 'B2', to: 'B2a' }, { from: 'B2', to: 'B3', end: 'none', dash: true }, { from: 'B3', to: 'B3a' }, { from: 'B3', to: 'B4', end: 'none', dash: true }, { from: 'B4', to: 'B5', end: 'none', dash: true }, { from: 'B4', to: 'B6', end: 'none', dash: true }, { from: 'B6', to: 'B7', end: 'none', dash: true },
+    { from: 'G1', to: 'G1a' }, { from: 'G1a', to: 'G1b', end: 'none', dash: true }, { from: 'G2', to: 'G2a' }, { from: 'G3', to: 'G3a' }, { from: 'G1', to: 'G2a', sides: ['right', 'left'], dash: true, label: '마지막 대화' },
+  ],
+};
+</script><script src="diagram.js"></script></body></html>

@@ -1,0 +1,58 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="diagram.css"><link rel="stylesheet" href="fonts.css">
+<style>pre.tree{position:absolute;left:0;top:0;width:560px;margin:0;font:11px/1.5 ui-monospace,Menlo,monospace;background:#F7F8F3;border:1.5px dashed #9AA39B;border-radius:14px;padding:14px 16px;color:#1F2937;box-sizing:border-box}pre.tree b{color:#17191B}pre.tree i{color:#6B7280;font-style:normal}</style></head><body>
+<h1 id="title"></h1><p class="sub" id="subtitle"></p><div id="canvas"><pre class="tree"><b>dajeong-mvp/</b>
+├─ <b>server/</b>                  <i>API 서버 (Python 3.11 · FastAPI)</i>
+│  ├─ app/
+│  │  ├─ main.py             <i>라우터 40개 (API 25 · 백오피스/연동 15) · 정적 파일 · Swagger</i>
+│  │  ├─ auth.py             <i>로그인 · 토큰 · 역할 · 가족 격리</i>
+│  │  ├─ ai.py               <i>OpenAI 응답/STT/요약 · MOCK · 사용량</i>
+│  │  ├─ jobs.py             <i>작업 워커 · 분석 · 기준선 · 요약</i>
+│  │  ├─ metrics.py          <i>태그 · 지표 · 기준선 · 비교 (순수 함수)</i>
+│  │  ├─ models.py           <i>SQLAlchemy 테이블 11개</i>
+│  │  └─ db.py               <i>SQLite / PostgreSQL 연결</i>
+│  ├─ tests/test_metrics.py  <i>단위 테스트 7개</i>
+│  ├─ seed.py                <i>시연 가족 DEMO1 · 24일치 대화</i>
+│  ├─ scripts_cleanup.py     <i>음성 보관 기간 정리</i>
+│  └─ requirements.txt
+├─ <b>web/</b>                     <i>정적 프론트엔드 (빌드 도구 없음)</i>
+│  ├─ index.html             <i>랜딩</i>
+│  ├─ tablet.html            <i>부모님 태블릿 (음성 인식 · TTS)</i>
+│  ├─ app.html + assets/app.js      <i>보호자 앱 (해시 라우팅)</i>
+│  ├─ admin.html + assets/admin.js  <i>백오피스 · 데이터 관리 (PC)</i>
+│  ├─ privacy.html · manifest.webmanifest
+│  ├─ fonts/  Jua · Pretendard Variable (OFL)
+│  └─ assets/  dajeong.css · api.js · illus.js · design/ (캐릭터 SVG)
+├─ <b>docs/</b>                    <i>기능명세 · 흐름도 · ERD · API · 운영 · 검수 · 캡처</i>
+├─ <b>contract/</b>                <i>견적서 · 계약서 · 작업지시서 (R4)</i>
+├─ <b>scripts/</b>                 <i>e2e 점검 · 캡처 · 다이어그램</i>
+├─ Dockerfile · docker-compose.yml · .env.example
+└─ README.md · GITHUB_SETUP.md</pre></div>
+<script>
+const N = (id, x, y, title, lines, tone, w = 190) => ({ id, x, y, w, title, lines, tone });
+window.DIAGRAM = {
+  title: '다정이 MVP 코드 구조도', subtitle: '왼쪽: 저장소 폴더 · 오른쪽: 모듈 의존 관계 (화살표 = import / 호출)', width: 1460, height: 660,
+  groups: [{ x: 620, y: 0, w: 820, h: 300, label: 'server/app (Python)', tone: 'dark' }, { x: 620, y: 330, w: 820, h: 320, label: 'web (브라우저 JS)', tone: 'lime' }],
+  nodes: [
+    N('main', 650, 40, 'main.py', ['FastAPI 라우터', 'pydantic 입력 검증'], 'dark'),
+    N('auth', 880, 40, 'auth.py', ['Depends(current) · guardian_only', 'admin_only'], ''),
+    N('ai', 1110, 40, 'ai.py', ['generate_reply · transcribe', 'summarize_* · MOCK'], 'soft'),
+    N('jobs', 650, 170, 'jobs.py', ['start_worker · enqueue', 'analyze_conversation', 'make_summary'], 'soft'),
+    N('metrics', 880, 170, 'metrics.py', ['compute_metrics · tag_parent_turns', 'build_baseline · compare_to_baseline'], ''),
+    N('models', 1110, 170, 'models.py · db.py', ['Family · Conversation · Turn …', 'SessionLocal · engine'], 'db'),
+    N('tests', 1230, 240, 'tests/', ['test_metrics.py'], '', 150),
+    N('api', 650, 370, 'api.js', ['fetch 래퍼 · 토큰 보관', 'login / logout / toast'], 'lime'),
+    N('index', 880, 370, 'index.html', ['랜딩 · 신청 폼'], ''),
+    N('tablet', 1110, 370, 'tablet.html', ['SpeechRecognition', 'speechSynthesis', '대화 루프'], ''),
+    N('appjs', 880, 490, 'app.js (app.html)', ['SCREENS: home · metric · talks · talk', 'report · family · more'], ''),
+    N('admin', 650, 490, 'admin.js (admin.html)', ['백오피스 · /api/admin/*', 'X-Admin-Token'], 'dark'),
+    N('css', 1110, 490, 'dajeong.css · illus.js', ['토큰 · 컴포넌트', '도형 그래픽 · 자체 글꼴'], 'lime'),
+  ],
+  edges: [
+    { from: 'main', to: 'auth' }, { from: 'main', to: 'ai', sides: ['top', 'top'] }, { from: 'main', to: 'jobs' }, { from: 'main', to: 'models', sides: ['right', 'top'], dash: true },
+    { from: 'jobs', to: 'metrics' }, { from: 'jobs', to: 'ai', sides: ['top', 'bottom'] }, { from: 'jobs', to: 'models' }, { from: 'auth', to: 'models', sides: ['bottom', 'top'], dash: true }, { from: 'ai', to: 'models', dash: true, label: 'ApiUsage' },
+    { from: 'tests', to: 'metrics', sides: ['left', 'bottom'], dash: true },
+    { from: 'index', to: 'api' }, { from: 'tablet', to: 'api', sides: ['left', 'right'] }, { from: 'appjs', to: 'api', sides: ['left', 'bottom'] }, { from: 'admin', to: 'api', sides: ['top', 'bottom'] }, { from: 'appjs', to: 'css', end: 'none', dash: true }, { from: 'tablet', to: 'css', end: 'none', dash: true },
+    { from: 'api', to: 'main', sides: ['left', 'left'], label: 'HTTP /api/* (JSON)', bold: true, dx: -60, dy: -12 },
+  ],
+};
+</script><script src="diagram.js"></script></body></html>

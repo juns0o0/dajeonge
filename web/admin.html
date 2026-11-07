@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>다정이 · 백오피스</title>
+<link rel="stylesheet" href="/assets/dajeong.css">
+<style>
+/* 백오피스 (PC) · 데이터 관리 화면. 토큰은 X-Admin-Token 헤더로 보낸다. */
+body{background:var(--bg)}
+.bo{display:grid;grid-template-columns:220px 1fr;min-height:100vh}
+.bo-side{background:var(--ink);color:var(--paper);padding:22px 16px;position:sticky;top:0;height:100vh;box-sizing:border-box}
+.bo-side .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:17px;margin-bottom:22px}
+.bo-side .brand small{display:block;font-weight:500;font-size:11.5px;color:#A39C90}
+.bo-side nav a{display:block;color:#E6E1D8;text-decoration:none;padding:10px 12px;border-radius:10px;font-weight:600;font-size:14px;margin-bottom:2px}
+.bo-side nav a.on{background:var(--lime);color:var(--ink)}
+.bo-side .foot{position:absolute;bottom:18px;left:16px;right:16px;font-size:12px;color:#A39C90}
+.bo-main{padding:26px 32px 60px;max-width:1180px}
+.bo-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.bo-head h1{margin:0;font-size:22px;letter-spacing:-.02em}
+.bo-head .sub{color:var(--ink-2);font-size:13.5px;margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+.stat{background:var(--paper);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow)}
+.stat .k{font-family:var(--f)}.bo-head h1{font-family:var(--f-display);font-weight:400;font-size:26px}
+.stat .k{font-size:12.5px;color:var(--ink-3);font-weight:700}
+.stat .v{font-size:28px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
+.stat .v small{font-size:13px;color:var(--ink-2);font-weight:600;margin-left:4px}
+.stat.warn .v{color:var(--notable)}
+.panel{background:var(--paper);border-radius:var(--r);padding:18px 20px;box-shadow:var(--shadow);margin-bottom:16px}
+.panel h2{margin:0 0 12px;font-size:15.5px}
+.toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.toolbar input,.toolbar select{border:2px solid var(--line);border-radius:10px;padding:9px 12px;font-size:14px;background:var(--paper)}
+.toolbar input:focus{border-color:var(--ink);outline:none}
+table.t th,table.t td{text-align:left;vertical-align:top}
+table.t td.r,table.t th.r{text-align:right;font-variant-numeric:tabular-nums}
+table.t tr.link{cursor:pointer}table.t tr.link:hover td{background:var(--lime-bg)}
+.st{display:inline-block;border-radius:999px;padding:2px 9px;font-size:12px;font-weight:700;background:var(--line);color:var(--ink-2)}
+.st.done,.st.analyzed,.st.ready{background:var(--ok-soft);color:var(--ok)}
+.st.queued,.st.running,.st.open,.st.pending,.st.new,.st.contacted{background:var(--watch-soft);color:var(--watch)}
+.st.failed{background:var(--notable-soft);color:var(--notable)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:6px 12px;font-size:13.5px}.kv b{color:var(--ink-2);font-weight:700}
+.turns .say{margin:6px 0;padding:9px 12px;border-radius:12px;background:var(--bg);font-size:13.5px;max-width:720px}
+.turns .say.parent{background:var(--lime-soft)}
+.turns .say .who{font-size:11.5px;color:var(--ink-3);font-weight:700;margin-bottom:2px}
+pre.code{background:#111111;color:#F4F0EA;border-radius:12px;padding:14px 16px;font:12.5px/1.5 ui-monospace,Menlo,monospace;overflow:auto;white-space:pre-wrap}
+.login-box{max-width:420px;margin:12vh auto}
+textarea.note{width:100%;min-height:60px;border:2px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;font-size:13px}
+.empty{color:var(--ink-3);padding:24px 0;text-align:center}
+@media (max-width:900px){.bo{grid-template-columns:1fr}.bo-side{position:static;height:auto}.stats{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="login" id="login">
+  <form class="card stack login-box" id="loginForm">
+    <div style="display:flex;align-items:center;gap:10px"><div style="width:40px" id="mark"></div><h2>다정이 백오피스</h2></div>
+    <p class="muted">운영자 토큰(<code>ADMIN_TOKEN</code>)을 입력합니다. 가족·대화·신청·작업 데이터를 관리하는 화면이며, 같은 API 로 외부 시스템과 연동합니다.</p>
+    <div class="field"><label for="token">운영자 토큰</label><input id="token" type="password" autocomplete="current-password" required></div>
+    <p class="err" id="loginErr"></p>
+    <button class="btn dark lg block" type="submit">들어가기</button>
+  </form>
+</div>
+
+<div class="bo" id="app" hidden>
+  <aside class="bo-side">
+    <div class="brand"><span style="width:28px;display:inline-block" id="mark2"></span><span>다정이<small>백오피스 · 데이터 관리</small></span></div>
+    <nav id="nav">
+      <a href="#home" data-t="home">현황</a>
+      <a href="#families" data-t="families">가족</a>
+      <a href="#talks" data-t="talks">대화 기록</a>
+      <a href="#apps" data-t="apps">신청 접수</a>
+      <a href="#jobs" data-t="jobs">처리 작업</a>
+      <a href="#usage" data-t="usage">API 사용량</a>
+      <a href="#api" data-t="api">연동 안내</a>
+    </nav>
+    <div class="foot"><a href="/docs" target="_blank" style="color:#E6E1D8">API 문서 (Swagger) ↗</a><br><a href="#" id="logout" style="color:#A39C90">토큰 지우기</a></div>
+  </aside>
+  <main class="bo-main">
+    <header class="bo-head" id="head"></header>
+    <div id="body"></div>
+  </main>
+</div>
+
+<script src="/assets/illus.js"></script>
+<script src="/assets/api.js"></script>
+<script src="/assets/admin.js"></script>
+</body>
+</html>

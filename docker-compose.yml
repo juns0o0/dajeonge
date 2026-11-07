@@ -1,0 +1,18 @@
+services:
+  api:
+    build: .
+    env_file: .env
+    ports: ["8000:8000"]
+    volumes:
+      - ./server/data:/app/server/data      # SQLite DB + 음성 파일 (백업 대상)
+    restart: unless-stopped
+
+  # HTTPS 가 필요하면 아래 Caddy 를 켜고 도메인을 바꾼다 (인증서 자동 발급).
+  # caddy:
+  #   image: caddy:2
+  #   ports: ["80:80", "443:443"]
+  #   command: caddy reverse-proxy --from dajeong.example.com --to api:8000
+  #   volumes: [caddy_data:/data]
+  #   depends_on: [api]
+# volumes:
+#   caddy_data:

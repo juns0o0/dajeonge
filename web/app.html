@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>다정이 · 보호자</title>
+<link rel="stylesheet" href="/assets/dajeong.css">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#CBEF5C">
+</head>
+<body>
+<div class="login" id="login">
+  <form class="card stack" id="loginForm">
+    <div style="display:flex;align-items:center;gap:10px"><div style="width:40px" id="mark"></div><h2>다정이 보호자 앱</h2></div>
+    <p class="muted">가족 코드와 보호자 비밀번호를 입력합니다.</p>
+    <div class="field"><label for="code">가족 코드</label><input id="code" autocomplete="username" placeholder="예: DEMO1" required></div>
+    <div class="field"><label for="pw">비밀번호</label><input id="pw" type="password" autocomplete="current-password" required></div>
+    <p class="err" id="loginErr"></p>
+    <button class="btn dark lg block" type="submit">들어가기</button>
+    <p class="faint" style="font-size:12.5px">시연 계정: DEMO1 / 1234</p>
+  </form>
+</div>
+
+<div class="app" id="app" hidden>
+  <header class="app-head" id="head"></header>
+  <main class="app-body" id="body"></main>
+  <nav class="tabbar" id="tabbar">
+    <a href="#home" data-t="home"><svg viewBox="0 0 24 24"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>홈</a>
+    <a href="#talks" data-t="talks"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>대화 기록</a>
+    <a href="#family" data-t="family"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4.5-6 8-6s7 2 8 6"/></svg>가족 정보</a>
+    <a href="#more" data-t="more"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>설정</a>
+  </nav>
+</div>
+<script src="/assets/illus.js"></script>
+<script src="/assets/api.js"></script>
+<script src="/assets/app.js"></script>
+</body>
+</html>

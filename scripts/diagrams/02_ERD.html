@@ -1,0 +1,38 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="diagram.css"><link rel="stylesheet" href="fonts.css"></head><body>
+<h1 id="title"></h1><p class="sub" id="subtitle"></p><div id="canvas"></div>
+<script>
+const T = (id, x, y, title, cols, w = 200) => ({ id, x, y, w, title, tone: 'table', lines: cols.map(c => c) });
+window.DIAGRAM = {
+  title: '다정이 MVP ERD', subtitle: 'server/app/models.py · 모든 기록은 families.id 로 격리 · reserved_* 는 이번 범위 밖 항목의 연결 위치', width: 1240, height: 780,
+  nodes: [
+    T('families', 110, 40, 'families', ['<span class=pk>id</span> PK', 'code  UK (가족 코드)', 'parent_name · parent_age · region', 'guardian_name · guardian_relation', 'guardian_password · tablet_password (해시)', 'keep_audio_days', 'created_at'], 250),
+    T('personas', 110, 250, 'personas', ['<span class=pk>id</span> PK', '<span class=fk>family_id</span> FK UK', 'display_name · calls_parent · formality', 'endings · expressions (JSON)', 'personality · habits · avoid_topics (JSON)', 'family_notes'], 250),
+    T('memories', 110, 440, 'memories', ['<span class=pk>id</span> PK', '<span class=fk>family_id</span> FK', 'title · detail · year', 'keywords (JSON, 검색 키)', 'reserved_recall_question'], 250),
+    T('sessions', 110, 610, 'sessions', ['<span class=pk>id</span> PK', 'token UK', '<span class=fk>family_id</span>', 'role (guardian | tablet)'], 250),
+    T('conversations', 380, 40, 'conversations', ['<span class=pk>id</span> PK', '<span class=fk>family_id</span> FK', 'started_at · ended_at', 'source (tablet | upload | seed)', 'status (open | finished | analyzed | failed)', 'audio_path · error'], 250),
+    T('turns', 380, 250, 'turns', ['<span class=pk>id</span> PK', '<span class=fk>conversation_id</span> FK', 'speaker (bot | parent) · text', 'started_at · ended_at · input_mode', 'tags (JSON: repeat | uncertain)', 'char_len · response_gap_sec', 'reserved_recall_result'], 250),
+    T('metrics', 380, 470, 'conversation_metrics', ['<span class=pk>id</span> PK', '<span class=fk>conversation_id</span> FK UK', '<span class=fk>family_id</span> FK', 'parent_turns · avg_utterance_len', 'repeat_rate · uncertain_rate', 'avg_response_gap · participation', 'duration_sec · valid · computed_at', 'reserved_consistency'], 250),
+    T('baselines', 720, 40, 'baselines', ['<span class=pk>id</span> PK', '<span class=fk>family_id</span> FK UK', 'fixed_at · n_conversations', 'values (JSON {metric:{mean,sd,n}})'], 230),
+    T('summaries', 720, 200, 'summaries', ['<span class=pk>id</span> PK', '<span class=fk>family_id</span> FK', 'kind (conversation | weekly)', '<span class=fk>conversation_id</span> FK (nullable)', 'period_start · period_end', 'text · status · error · model'], 230),
+    T('jobs', 720, 400, 'jobs', ['<span class=pk>id</span> PK', 'kind (analyze | summarize)', 'ref_id (conversation | summary)', 'family_id', 'status (queued | running | done | failed)', 'attempts · error · updated_at'], 230),
+    T('api_usage', 1000, 40, 'api_usage', ['<span class=pk>id</span> PK', 'family_id (nullable)', 'provider · purpose · model', 'input_tokens · output_tokens', 'ok · error · created_at'], 210),
+    T('applications', 1000, 230, 'applications', ['<span class=pk>id</span> PK', 'kind (home | org)', 'name · org_name · phone · email', 'region · message · agreed', 'created_at'], 210),
+  ],
+  edges: [
+    { from: 'families', to: 'personas', start: 'one', end: 'one', sides: ['bottom', 'top'], label: '1 : 1' },
+    { from: 'families', to: 'memories', start: 'one', end: 'crow', sides: ['left', 'left'], label: '1 : N', dx: -40 },
+    { from: 'families', to: 'sessions', start: 'one', end: 'crow', sides: ['left', 'left'], dx: -70, label: '1 : N' },
+    { from: 'families', to: 'conversations', start: 'one', end: 'crow', sides: ['right', 'left'], label: '1 : N' },
+    { from: 'conversations', to: 'turns', start: 'one', end: 'crow', sides: ['bottom', 'top'], label: '1 : N' },
+    { from: 'conversations', to: 'metrics', start: 'one', end: 'one', sides: ['left', 'left'], label: '1 : 1', dx: -36 },
+    { from: 'families', to: 'baselines', start: 'one', end: 'one', sides: ['top', 'top'], label: '1 : 0..1', dy: -8 },
+    { from: 'conversations', to: 'summaries', start: 'one', end: 'crow', sides: ['right', 'left'], label: '1 : N (대화 요약)' },
+    { from: 'summaries', to: 'jobs', end: 'none', dash: true, sides: ['bottom', 'top'], label: 'ref_id' },
+    { from: 'metrics', to: 'jobs', end: 'none', dash: true, sides: ['right', 'left'], label: 'ref_id = conversation_id' },
+  ],
+  notes: [
+    { x: 1000, y: 400, w: 210, html: '<b>향후 연결 위치</b><br>· 기억 회상 → memories.reserved_recall_question + turns.reserved_recall_result<br>· 일관성 점수 → conversation_metrics.reserved_consistency<br>· 자동 알림 → baselines 비교 결과로 alerts 테이블 추가' },
+    { x: 1000, y: 540, w: 210, html: '<b>삭제 규칙</b><br>families 삭제 → persona·memories·conversations·turns·metrics 함께 삭제(cascade). 음성 파일은 audio_path 기준 삭제.' },
+  ],
+};
+</script><script src="diagram.js"></script></body></html>
