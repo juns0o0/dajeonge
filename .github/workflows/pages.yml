@@ -1,0 +1,49 @@
+name: Deploy landing to GitHub Pages
+
+# 랜딩(index.html·privacy.html)만 정적으로 배포한다. 태블릿·보호자 앱·백오피스는 API 서버가 필요해 제외.
+on:
+  push:
+    branches: [main]
+    paths: ["web/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build landing (web/ → site/, 하위 경로용 상대 경로로 변환)
+        run: |
+          mkdir -p site/assets
+          cp web/index.html web/privacy.html site/
+          cp web/assets/dajeong.css web/assets/icon.svg site/assets/
+          cp -r web/fonts site/fonts
+          sed -i 's#href="/privacy.html"#href="privacy.html"#g' site/index.html
+          sed -i 's#href="/assets/#href="assets/#g; s#href="/"#href="./"#g' site/privacy.html
+          sed -i "s#url(\"/fonts/#url(\"../fonts/#g; s#url('/fonts/#url('../fonts/#g" site/assets/dajeong.css
+          touch site/.nojekyll
+          grep -rnoE '(href|src)="/[^"]|url\(["'"'"']?/' site --include='*.html' --include='*.css' && exit 1 || echo "no absolute paths left"
+
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
