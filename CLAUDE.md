@@ -23,6 +23,9 @@ node scripts/render_diagrams.js                                                 
 python3 scripts/build_spec_xlsx.py                                                   # docs/다정이_MVP_기능명세서.xlsx
 python3 scripts/build_report_hwpx.py && node scripts/report_pdf.js                   # docs/결과보고서/*.hwpx, *.pdf
 python3 contract/revise_docs.py contract/_src contract                               # 계약 문서 (원본 docx는 _src/, git 제외)
+# 인감본(납품 패키지 전용, 저장소에는 넣지 않는다 — 공개 저장소): 인감 PNG는 contract/_src/seal.png (git 제외)
+python3 contract/stamp_seal.py contract/_src/seal.png <납품 폴더>                   # 계약 문서 3종 docx·pdf 날인
+SEAL_PNG=contract/_src/seal.png OUT_DIR=<납품 폴더> python3 scripts/build_report_hwpx.py   # 결과보고서 표지 날인본 (hwpx·html → Chrome headless 로 pdf)
 ```
 
 ## 바꾸면 안 되는 것

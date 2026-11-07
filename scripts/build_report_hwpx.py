@@ -6,13 +6,14 @@
 
 실행: python3 scripts/build_report_hwpx.py
 """
+import os
 import html, math, pathlib, struct, zipfile, datetime
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 T = ROOT / "scripts/report_template"
 CAP = ROOT / "docs/captures/결과보고서용"
 DIAG = ROOT / "docs/diagrams"
-OUT = ROOT / "docs/결과보고서"; OUT.mkdir(exist_ok=True)
+OUT = pathlib.Path(os.environ["OUT_DIR"]) if os.environ.get("OUT_DIR") else ROOT / "docs/결과보고서"; OUT.mkdir(parents=True, exist_ok=True)   # 인감본은 OUT_DIR 로 따로 낸다
 NAME = "다정이_MVP_용역결과보고서"
 def cap(prefix):
     """캡처 파일을 번호 접두어로 찾는다 (대화 ID 등 가변 부분 무시)."""
@@ -23,6 +24,7 @@ def cap(prefix):
 # =====================================================================
 # 1. 보고서 내용
 # =====================================================================
+SEAL = pathlib.Path(os.environ["SEAL_PNG"]) if os.environ.get("SEAL_PNG") else None   # 인감 PNG — 납품본(OUT_DIR)에만 찍는다. 저장소는 공개라 넣지 않는다.
 REPORT_DATE = "2026. 11. 13"
 R = dict(
     title="용역 결과 보고서", subtitle="[AI Care Bot ‘다정이’ 웹 MVP 설계·디자인·개발]",
@@ -240,7 +242,15 @@ def build_section():
     ps.append(P(R["date"], pp=20, cp=11, h=2000))
     ps += [P(pp=20, cp=11, h=2000) for _ in range(4)]
     ps.append(P(R["company"], pp=20, cp=11, h=2000))
-    ps.append(P(f"대표자:   {R['ceo']}   (인)", pp=20, cp=10, h=2000))
+    if SEAL:
+        # 글자 앞에 떠 있는(IN_FRONT_OF_TEXT) 13mm 인감. 가운데 정렬된 "대표자:   정준수   (인)" 줄에서 (인) 중심은 단 중앙 기준 약 +23mm.
+        seal_xml, sw, sh = PIC(SEAL, int(13 / 25.4 * 7200))
+        seal_xml = (seal_xml.replace('textWrap="SQUARE"', 'textWrap="IN_FRONT_OF_TEXT"')
+                    .replace('treatAsChar="1" affectLSpacing="0" flowWithText="1" allowOverlap="0"', 'treatAsChar="0" affectLSpacing="0" flowWithText="1" allowOverlap="1"')
+                    .replace('vertAlign="TOP" horzAlign="LEFT" vertOffset="0" horzOffset="0"', f'vertAlign="TOP" horzAlign="CENTER" vertOffset="{int(-4 / 25.4 * 7200)}" horzOffset="{int(23 / 25.4 * 7200)}"'))
+        ps.append(P(f"대표자:   {R['ceo']}   (인)", pp=20, cp=10, h=2000).replace('</hp:run>', '</hp:run><hp:run charPrIDRef="10">' + seal_xml + '</hp:run>', 1))
+    else:
+        ps.append(P(f"대표자:   {R['ceo']}   (인)", pp=20, cp=10, h=2000))
     # 1. 용역 개요
     ps.append(P("용역 개요", pp=22, cp=16, pb=1, h=1600)); ps.append(P())
     for line, subs in R["overview"]:
@@ -380,7 +390,8 @@ table.g td{{text-align:center;height:24px}} table.g td.on{{background:#8a8a8a}} 
 table.r tr{{page-break-inside:avoid}} table.r td{{padding:0}} table.r td.n{{text-align:center;font-weight:700;width:18%;padding:6px}} table.r td.l{{background:#E6E6E6;text-align:center;font-weight:700;padding:3px}} table.r td.i{{text-align:center;padding:4px}} table.r img{{max-width:100%;max-height:225mm;display:inline-block}}
 table.s td{{text-align:center;height:34px;font-size:11pt}} a{{color:#00f}}
 </style></head><body>''']
-    h.append(f'<div class="cover"><div class="box">{e(R["title"])}<br>{e(R["subtitle"])}</div><div class="date">{e(R["date"])}</div><div class="co"><b>{e(R["company"])}</b>대표자: &nbsp; {e(R["ceo"])} &nbsp; (인)</div></div>')
+    seal_img = ('<img src="' + SEAL.resolve().as_uri() + '" style="position:absolute;left:50%;top:50%;width:13mm;height:13mm;transform:translate(-50%,-52%)">') if SEAL else ''
+    h.append(f'<div class="cover"><div class="box">{e(R["title"])}<br>{e(R["subtitle"])}</div><div class="date">{e(R["date"])}</div><div class="co"><b>{e(R["company"])}</b>대표자: &nbsp; {e(R["ceo"])} &nbsp; <span style="position:relative">(인){seal_img}</span></div></div>')
     h.append('<h2 class="pb">1. 용역 개요</h2>')
     for line, subs in R["overview"]:
         h.append(f"<p>{e(line)}</p>"); h += [f'<p class="sub">- {e(s)}</p>' for s in subs]
